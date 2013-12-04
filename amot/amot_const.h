@@ -20,6 +20,7 @@ namespace amot
 	using std::string;
 	using std::wstring;
 	using std::invalid_argument;
+	using std::bad_exception;
 
 	//define type
 	typedef void* object;

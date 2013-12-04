@@ -1,20 +1,19 @@
-#include "stdafx.h"
 #include "amot_record.h"
 
 namespace amot
 {
 	Record::Record()
 	{
-		_Offset = 0;
-		_Length = 0;
-		_Next = null;
+		Offset = 0;
+		Length = 0;
+		Next = null;
 	}
 
 	Record::Record(uint32 offset, uint32 length, Record* next)
 	{
-		_Offset = offset;
-		_Length = length;
-		_Next = next;
+		Offset = offset;
+		Length = length;
+		Next = next;
 	}
 
 	Record::~Record() { }
@@ -24,13 +23,13 @@ namespace amot
 		Record* rec = this;
 		while(rec != null) 
 		{
-			if(rec->_Length == 0)
+			if(rec->Length == 0)
 			{
-				if(offset_max == 0 || rec->_Offset < offset_max)
+				if(offset_max == 0 || rec->Offset < offset_max)
 					return rec;
 				return null;
 			}
-			rec = rec->_Next;
+			rec = rec->Next;
 		}
 		return null;
 	}
@@ -40,13 +39,13 @@ namespace amot
 		Record* rec = this;
 		while(rec != null) 
 		{
-			if(rec->_Length > 0)
+			if(rec->Length > 0)
 			{
-				if(offset_max == 0 || rec->_Offset < offset_max)
+				if(offset_max == 0 || rec->Offset < offset_max)
 					return rec;
 				return null;
 			}
-			rec = rec->_Next;
+			rec = rec->Next;
 		}
 		return rec;
 	}

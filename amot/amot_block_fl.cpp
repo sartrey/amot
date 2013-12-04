@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "amot_block_fl.h"
 
 namespace amot
@@ -7,12 +6,12 @@ namespace amot
 			: Block(level, AMOT_BLOCK_TYPE_FL)
 	{
 		_Unit = unit;
-		uint32 total_var = GetMaxBlockVol(level, unit);
+		uint32 total_var = GetBlockVol(level, unit);
 		_TotalRec = total_var / 8;
 		_Size = total_var * unit;
 
-		_Data = new BYTE[_Size];
-		_Record = new BYTE[_TotalRec];
+		_Data = new byte[_Size];
+		_Record = new byte[_TotalRec];
 		memset(_Data, 0, _Size);
 		memset(_Record, 0, _TotalRec);
 	}
@@ -23,7 +22,7 @@ namespace amot
 			delete [] _Record;
 	}
 
-	uint32 BlockFL::GetUsedSize()
+	uint32 BlockFL::UsedSize()
 	{
 		uint32 uc = 0;
 		for(uint32 i=0; i<_TotalRec; i++)
@@ -39,9 +38,9 @@ namespace amot
 		return us;
 	}
 
-	uint32 BlockFL::GetFreeSize()
+	uint32 BlockFL::FreeSize()
 	{
-		return _Size - GetUsedSize();
+		return _Size - UsedSize();
 	}
 
 	uint32 BlockFL::Count(object data, uint32 size)
@@ -77,25 +76,20 @@ namespace amot
 		return null;
 	}
 
-	bool BlockFL::Free(object data, bool clear)
+	void BlockFL::Free(object data, bool clear)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
-		if(offset % _Unit != 0) 
-			return false;
-		offset = offset / _Unit;
-		if(clear) 
-			memset(data, 0, _Unit);
-		byte tmp = 0xFF ^ (0x01 << (7 - offset % 8));
-		_Record[offset/8] &= tmp;
-		return true;
+		if(offset % _Unit == 0)
+		{
+			offset = offset / _Unit;
+			if(clear) 
+				memset(data, 0, _Unit);
+			byte tmp = 0xFF ^ (0x01 << (7 - offset % 8));
+			_Record[offset/8] &= tmp;
+		}
 	}
 
 	void BlockFL::Optimize()
 	{
-	}
-
-	uint32 BlockFL::GetUnit()
-	{
-		return _Unit;
 	}
 }

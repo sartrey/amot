@@ -1,6 +1,6 @@
 #pragma once
  
-#include "amot_const.h"
+#include "amot_base.h"
 
 namespace amot
 {
@@ -9,17 +9,49 @@ namespace amot
 	public:
 		Config();
 		~Config();
+	private:
+		//max GP block count
+		uint32 _GP_BLOCK_COUNT_MAX;
+
+		//max FL block count
+		uint32 _FL_BLOCK_COUNT_MAX;
+
+		//block level range
+		uint8 _USER_BLOCK_LEVEL_MIN;
+		uint8 _USER_BLOCK_LEVEL_MAX;
 	public:
-		//memory block max count
-		uint32 BLOCK_MAX_COUNT;
+		inline uint32 Config::BLOCK_COUNT_MAX()
+		{
+			return _GP_BLOCK_COUNT_MAX + _FL_BLOCK_COUNT_MAX;
+		}
 
-		//fix length max count
-		//Must < MP_BCK_COUNT_MAX
-		uint32 FL_MAX_COUNT;
+		inline uint32 GP_BLOCK_COUNT_MAX() { return _GP_BLOCK_COUNT_MAX; };
+		inline void GP_BLOCK_COUNT_MAX(uint32 value) 
+		{
+			_GP_BLOCK_COUNT_MAX = value;
+			if(BLOCK_COUNT_MAX() > AMOT_BLOCK_COUNT_MAX)
+				throw new invalid_argument(AMOT_ERR_1);
+		};
 
-		//Memory Block Level Range
-		byte BLOCK_LEVEL_DEFAULTMIN;
-		byte BLOCK_LEVEL_DEFAULTMAX;
+		inline uint32 FL_BLOCK_COUNT_MAX() { return _FL_BLOCK_COUNT_MAX; };
+		inline void FL_BLOCK_COUNT_MAX(uint32 value) 
+		{
+			_FL_BLOCK_COUNT_MAX = value;
+			if(BLOCK_COUNT_MAX() > AMOT_BLOCK_COUNT_MAX)
+				throw new invalid_argument(AMOT_ERR_1);
+		};
+
+		inline uint8 USER_BLOCK_LEVEL_MAX() { return _USER_BLOCK_LEVEL_MAX; };
+		inline void USER_BLOCK_LEVEL_MAX(uint8 value) 
+		{
+			_USER_BLOCK_LEVEL_MAX = value;
+		};
+
+		inline uint8 USER_BLOCK_LEVEL_MIN() { return _USER_BLOCK_LEVEL_MIN; };
+		inline void USER_BLOCK_LEVEL_MIN(uint8 value) 
+		{
+			_USER_BLOCK_LEVEL_MIN = value;
+		};
 	};
 
 	typedef Config* PtrConfig;

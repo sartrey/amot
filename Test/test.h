@@ -1,4 +1,4 @@
-#include "mem_pool.h"
+#include "amot_pool.h"
 #include <vector>
 #include <iostream>
 #include <stdexcept>
@@ -9,25 +9,23 @@ using std::vector;
 using std::string;
 using std::exception;
 
-using namespace mempool;
-
 class Tester
 {
 public:
 	Tester();
 	~Tester();
 private:
-	MemoryPool* _MemPool;
+	amot::Pool* _MemPool;
 public:
 	vector<LPVOID> _Funcs;
 	vector<string> _Names;
-	typedef void (*PFUNC)(MemoryPool*);
+	typedef void (*PFUNC)(amot::Pool*);
 public:
 	void Add(string name, PFUNC func);
 	void Run();
 };
 
-class A : public IDisposable
+class A : public amot::IDisposable
 {
 public:
 	int _a;
@@ -46,16 +44,16 @@ public:
 	}
 };
 
-void Test_Optimize(MemoryPool* mp);
-void Test_1_1(MemoryPool* mp);
-void Test_1_2(MemoryPool* mp);
-void Test_1_3(MemoryPool* mp);
-void Test_1_4(MemoryPool* mp);
-void Test_2_Expand(MemoryPool* mp);
-void Test_2_Sign(MemoryPool* mp);
-void Test_2_Unsign(MemoryPool* mp);
-void Test_2_1(MemoryPool* mp);
-void Test_2_2(MemoryPool* mp);
-void Test_2_3(MemoryPool* mp);
-void Test_3_1(MemoryPool* mp);
-void Test_3_2(MemoryPool* mp);
+void Test_Optimize(amot::Pool* mp);
+void Test_1_1(amot::Pool* mp);
+void Test_1_2(amot::Pool* mp);
+void Test_1_3(amot::Pool* mp);
+void Test_1_4(amot::Pool* mp);
+void Test_2_Expand(amot::Pool* mp);
+void Test_2_Sign(amot::Pool* mp);
+void Test_2_Unsign(amot::Pool* mp);
+void Test_2_1(amot::Pool* mp);
+void Test_2_2(amot::Pool* mp);
+void Test_2_3(amot::Pool* mp);
+void Test_3_1(amot::Pool* mp);
+void Test_3_2(amot::Pool* mp);

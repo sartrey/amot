@@ -1,12 +1,11 @@
 #pragma once
 
-#include "amot_base.h"
 #include "amot_config.h"
 #include "amot_block.h"
 
 namespace amot
 {
-	class Pool
+	class AMOT_API Pool
 	{
 	public:
 		Pool(PtrConfig config = null);
@@ -14,16 +13,23 @@ namespace amot
 	private:
 		PtrConfig _Config;
 		PtrBlock* _Blocks;
-		uint32* _BlockEdges;
+		uint32* _BlockOffsets;
 	public:
 		//allocate memory
 		template<typename T>
 		T* Alloc(uint32 count = 1, bool ctor = false)
 		{
-			object data = _Alloc(sizeof(T), count);
+			uint32 size = sizeof(T);
+			object data = _Alloc(size, count);
+			uint32 addr = (uint32)data;
 			if(ctor)
+			{
 				for(uint32 i = 0; i < count; i++)
-					new((object)(((uint32)data + i * sizeof(T)))) T();
+				{
+					new((object)addr) T();
+					addr += size;
+				}
+			}
 			return (T*)data;
 		}
 
@@ -38,16 +44,16 @@ namespace amot
 		}
 
 		//free memory
-		bool Free(object data, bool clear = false);
+		void Free(object data, bool clear = false);
 
 		//free all memory
-		void FreeAll(bool clear = false);
+		void FreeAll();
 
 		//sign length
-		bool Sign(uint32 size, uint32 count = 1000);
+		void Sign(uint32 size, uint32 count = 1000);
 
 		//unsign length
-		bool Unsign(uint32 size);
+		void Unsign(uint32 size);
 
 		//optimize pool
 		void Optimize();
@@ -58,5 +64,6 @@ namespace amot
 		object _Alloc(uint32 size, uint32 count);
 		void _Dispose(object data, uint32 size);
 		PtrBlock _Expand(uint32 len);
+		PtrBlock _Rebuild();
 	};
 }

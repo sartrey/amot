@@ -2,7 +2,7 @@
 
 Tester::Tester()
 {
-	_MemPool = new MemoryPool();
+	_MemPool = new amot::Pool();
 }
 
 Tester::~Tester()
@@ -33,12 +33,12 @@ void Tester::Add(string name, PFUNC func)
 	_Funcs.push_back(func);
 }
 
-void Test_Optimize(MemoryPool* mp)
+void Test_Optimize(amot::Pool* mp)
 {
 	mp->Optimize();
 }
 
-void Test_1_1(MemoryPool* mp)
+void Test_1_1(amot::Pool* mp)
 {
 	for(int i=0;i<10000;i++)
 	{
@@ -65,7 +65,7 @@ void Test_1_1(MemoryPool* mp)
 	}
 }
 
-void Test_1_2(MemoryPool* mp)
+void Test_1_2(amot::Pool* mp)
 {
 	for(int i=0;i<10000;i++)
 	{
@@ -82,7 +82,7 @@ void Test_1_2(MemoryPool* mp)
 	}
 }
 
-void Test_1_3(MemoryPool* mp)
+void Test_1_3(amot::Pool* mp)
 {
 	for(int i=0;i<10000;i++)
 	{
@@ -109,7 +109,7 @@ void Test_1_3(MemoryPool* mp)
 	}
 }
 
-void Test_1_4(MemoryPool* mp)
+void Test_1_4(amot::Pool* mp)
 {
 	for(int i=0;i<10000;i++)
 	{
@@ -126,25 +126,25 @@ void Test_1_4(MemoryPool* mp)
 	}
 }
 
-void Test_2_Expand(MemoryPool* mp)
+void Test_2_Expand(amot::Pool* mp)
 {
 	//预扩展内存本身将一定程度提高后续操作的效率
 	//由于扩展内存会导致进程的堆发生目前未知的变异，导致系统内存分配效率显著下降
 	//内存池本身效率的时变稳定特性得以体现
-	bool ret = mp->Expand(GetMPBVol(8)); 
+	bool ret = mp->Expand(amot::GetBlockVol(8));
 }
 
-void Test_2_Sign(MemoryPool* mp)
+void Test_2_Sign(amot::Pool* mp)
 {
-	bool ret = mp->Sign(320);
+	mp->Sign(320);
 }
 
-void Test_2_Unsign(MemoryPool* mp)
+void Test_2_Unsign(amot::Pool* mp)
 {
-	bool ret = mp->Unsign(320);
+	mp->Unsign(320);
 }
 
-void Test_2_1(MemoryPool* mp)
+void Test_2_1(amot::Pool* mp)
 {
 	for(int i=0;i<10000;i++)
 	{
@@ -157,7 +157,7 @@ void Test_2_1(MemoryPool* mp)
 	}
 }
 
-void Test_2_2(MemoryPool* mp)
+void Test_2_2(amot::Pool* mp)
 {
 	for(int i=0;i<10000;i++)
 	{
@@ -170,7 +170,7 @@ void Test_2_2(MemoryPool* mp)
 	}
 }
 
-void Test_3_1(MemoryPool* mp)
+void Test_3_1(amot::Pool* mp)
 {
 	A* obj = NULL;
 	for(int i=0;i<10000;i++)
@@ -181,7 +181,7 @@ void Test_3_1(MemoryPool* mp)
 	}
 }
 
-void Test_3_2(MemoryPool* mp)
+void Test_3_2(amot::Pool* mp)
 {
 	for(int i=0;i<10000;i++)
 	{

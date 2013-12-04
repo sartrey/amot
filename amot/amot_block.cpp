@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "amot_block.h"
 
 namespace amot
@@ -11,7 +10,8 @@ namespace amot
 
 	Block::~Block()
 	{
-		if(_Data != NULL) delete [] _Data;
+		if(_Data != null)
+			delete [] _Data;
 	}
 
 	bool Block::Enclose(object data)

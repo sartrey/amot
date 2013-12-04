@@ -1,24 +1,26 @@
-#include "stdafx.h"
 #include "amot_base.h"
 
 namespace amot
 {
-	uint32 GetMaxBlockVol(uint8 level)
+	void AssertBlockLevel(uint8 level)
 	{
-		if(level < 1 || level > AMOT_BLOCK_LEVEL_MAX)
+		if(level < AMOT_BLOCK_LEVEL_MIN 
+		|| level > AMOT_BLOCK_LEVEL_MAX)
 		{
-			throw new invalid_argument("invalid memory block level");
+			throw new invalid_argument(AMOT_ERR_0);
 		}
+	}
+
+	uint32 GetBlockVol(uint8 level)
+	{
+		AssertBlockLevel(level);
 		uint32 result = (uint32)(pow(4.0f, level - 1)) * 1024;
 		return result;
 	}
 
-	uint32 GetMaxBlockVol(uint8 level, uint32 unit)
+	uint32 GetBlockVol(uint8 level, uint32 unit)
 	{
-		if(level < 1 || level > AMOT_BLOCK_LEVEL_MAX)
-		{
-			throw new invalid_argument("invalid memory block level");
-		}
+		AssertBlockLevel(level);
 		uint32 size = (uint32)(pow(4.0f, level - 1)) * 1024;
 		uint32 count = size / unit;
 		count = count - count % 8;
@@ -27,11 +29,11 @@ namespace amot
 
 	uint8 GetMinBlockLevel(uint32 size)
 	{
-		uint32 lvl = 1;
-		uint32 size_max = 1024;
-		while(size_max < size)
+		uint8 lvl = AMOT_BLOCK_LEVEL_MIN;
+		uint32 real_size = AMOT_BLOCK_SIZE_MIN;
+		while(real_size < size)
 		{
-			size_max *= 4;
+			real_size *= 4;
 			++lvl;
 		}
 		if(lvl > AMOT_BLOCK_LEVEL_MAX) return 0;

@@ -16,7 +16,7 @@ namespace amot
 		object _Data;
 		uint32 _Size;
 	public:
-		//test address can be included in block
+		//test if address can be included in block
 		bool Enclose(object data);
 
 		//get pointer at specific offset from head
@@ -27,16 +27,16 @@ namespace amot
 		virtual uint32 Count(object data, uint32 size) = 0;
 
 		//get used size of block
-		virtual uint32 GetUsedSize() = 0;
+		virtual uint32 UsedSize() = 0;
 
 		//get free size of block
-		virtual uint32 GetFreeSize() = 0;
+		virtual uint32 FreeSize() = 0;
 
 		//allocate memory as specific length
 		virtual object Alloc(uint32 len) = 0;
 
 		//free specific object
-		virtual bool Free(object data, bool clear = false) = 0;
+		virtual void Free(object data, bool clear = false) = 0;
 
 		//optimize block storage
 		virtual void Optimize() = 0;

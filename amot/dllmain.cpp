@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "windows.h"
 #pragma warning(disable:4100)
 
 BOOL APIENTRY DllMain( HMODULE hModule,

@@ -14,11 +14,11 @@ namespace amot
 	private:
 		PtrRecord _FirstRecord;
 	public:
-		uint32 GetUsedSize();
-		uint32 GetFreeSize();
+		uint32 UsedSize();
+		uint32 FreeSize();
 		uint32 Count(object data, uint32 size);
 		object Alloc(uint32 len);
-		bool Free(object data, bool clear = false);
+		void Free(object data, bool clear);
 		void Optimize();
 	private:
 		void ClearRecord();

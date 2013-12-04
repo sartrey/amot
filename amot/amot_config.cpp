@@ -1,14 +1,13 @@
-#include "stdafx.h"
 #include "amot_config.h"
 
 namespace amot
 {
 	Config::Config()
 	{
-		BLOCK_MAX_COUNT = 256;
-		FL_MAX_COUNT = 16;
-		BLOCK_LEVEL_DEFAULTMIN = 1;
-		BLOCK_LEVEL_DEFAULTMAX = 11;
+		_GP_BLOCK_COUNT_MAX = 200;
+		_FL_BLOCK_COUNT_MAX = 20;
+		_USER_BLOCK_LEVEL_MIN = 1;
+		_USER_BLOCK_LEVEL_MAX = 11;
 	}
 
 	Config::~Config()
