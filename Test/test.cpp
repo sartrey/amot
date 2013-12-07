@@ -33,6 +33,50 @@ void Tester::Add(string name, PFUNC func)
 	_Funcs.push_back(func);
 }
 
+void Test_0_1(amot::Pool* mp)
+{
+	int* p1 = mp->Alloc<int>(3);
+	double* p2 = mp->Alloc<double>(7);
+	int* p3 = mp->Alloc<int>(15);
+	double* p4 = mp->Alloc<double>(7);
+	int* p5 = mp->Alloc<int>(290);
+	double* p6 = mp->Alloc<double>(7);
+	int* p7 = mp->Alloc<int>(3);
+	double* p8 = mp->Alloc<double>(7);
+	int* p9 = mp->Alloc<int>(3);
+	double* p10 = mp->Alloc<double>(7);
+	for(int i=0; i<3; i++)
+		p1[i] = i;
+	for(int i=0; i<7; i++)
+		p2[i] = i;
+	for(int i=0; i<15; i++)
+		p3[i] = i;
+	for(int i=0; i<7; i++)
+		p4[i] = i;
+	for(int i=0; i<290; i++)
+		p5[i] = i;
+	for(int i=0; i<7; i++)
+		p6[i] = i;
+	for(int i=0; i<3; i++)
+		p7[i] = i;
+	for(int i=0; i<7; i++)
+		p8[i] = i;
+	for(int i=0; i<3; i++)
+		p9[i] = i;
+	for(int i=0; i<7; i++)
+		p10[i] = i;
+	mp->Free(p1);
+	mp->Free(p2);
+	mp->Free(p3);
+	mp->Free(p4);
+	mp->Free(p5);
+	mp->Free(p6);
+	mp->Free(p7);
+	mp->Free(p8);
+	mp->Free(p9);
+	mp->Free(p10);
+}
+
 void Test_Optimize(amot::Pool* mp)
 {
 	mp->Optimize();

@@ -21,9 +21,9 @@ namespace amot
 		{
 			uint32 size = sizeof(T);
 			object data = _Alloc(size, count);
-			uint32 addr = (uint32)data;
 			if(ctor)
 			{
+				uint32 addr = (uint32)data;
 				for(uint32 i = 0; i < count; i++)
 				{
 					new((object)addr) T();

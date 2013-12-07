@@ -16,11 +16,11 @@ namespace amot
 		uint32 Offset;
 		uint32 Length;
 	public:
-		//return first non-zero rec
+		//return first non-zero rec from self
 		//offset will less than offset_max if offset_max > 0
 		Record* NextNonzero(uint32 offset_max = 0);
 
-		//return first zero rec
+		//return first zero rec from self
 		//offset will less than offset_max if offset_max > 0
 		Record* NextZero(uint32 offset_max = 0);
 	};

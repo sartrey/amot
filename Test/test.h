@@ -44,6 +44,7 @@ public:
 	}
 };
 
+void Test_0_1(amot::Pool* mp);
 void Test_Optimize(amot::Pool* mp);
 void Test_1_1(amot::Pool* mp);
 void Test_1_2(amot::Pool* mp);

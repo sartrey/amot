@@ -18,9 +18,7 @@ namespace amot
 	{
 		uint32 d1 = (uint32)_Data;
 		uint32 d2 = (uint32)data;
-		if(d2 < d1) return false;
-		if(d2 >= d1 + _Size) return false;
-		return true;
+		return (d2 >= d1 && d2 < d1 + _Size);
 	}
 
 	object Block::Offset(uint32 offset)

@@ -7,7 +7,7 @@ namespace amot
 	Pool::Pool(PtrConfig config)
 	{
 		_Config = (config == null ? new Config() : config);
-		uint32 block_total = _Config->BLOCK_COUNT_MAX();
+		uint32 block_total = _Config->BLOCK_COUNT_MAX;
 
 		_Blocks = new PtrBlock[block_total];
 		for(uint32 i=0; i<block_total; i++) 
@@ -16,11 +16,11 @@ namespace amot
 		//GP | FL | ...
 		//e.g. GP:2|FL:4| => {2,6}
 		_BlockOffsets = new uint32[2];
-		_BlockOffsets[0] = _Config->GP_BLOCK_COUNT_MAX();
-		_BlockOffsets[1] = _BlockOffsets[0] + _Config->FL_BLOCK_COUNT_MAX();
+		_BlockOffsets[0] = _Config->GP_BLOCK_COUNT_MAX;
+		_BlockOffsets[1] = _BlockOffsets[0] + _Config->FL_BLOCK_COUNT_MAX;
 		//more block type ...
 
-		PtrBlock bck = new BlockGP(_Config->USER_BLOCK_LEVEL_MIN());
+		PtrBlock bck = new BlockGP(_Config->USER_BLOCK_LEVEL_MIN);
 		_Blocks[0] = bck;
 	}
 
@@ -28,7 +28,7 @@ namespace amot
 	{
 		if(_Blocks != null) 
 		{
-			for(uint32 i=0;i<_Config->BLOCK_COUNT_MAX();i++)
+			for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX; i++)
 				if(_Blocks[i] != null)
 					delete _Blocks[i];
 			delete [] _Blocks;
@@ -77,7 +77,7 @@ namespace amot
 
 	void Pool::_Dispose(object data, uint32 size)
 	{
-		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX(); i++)
+		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX; i++)
 		{
 			PtrBlock bck = _Blocks[i];
 			if(bck == null || !bck->Enclose(data)) 
@@ -109,7 +109,7 @@ namespace amot
 
 	PtrBlock Pool::_Rebuild()
 	{
-		PtrBlock bck = new BlockGP(_Config->USER_BLOCK_LEVEL_MIN());
+		PtrBlock bck = new BlockGP(_Config->USER_BLOCK_LEVEL_MIN);
 		_Blocks[0] = bck;
 		return bck;
 	}
@@ -122,18 +122,17 @@ namespace amot
 
 	void Pool::Free(object data, bool clear)
 	{
-		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX(); i++)
+		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX; i++)
 		{
 			Block* bck = _Blocks[i];
-			if(bck == null || !bck->Enclose(data)) 
-				continue;
-			bck->Free(data, clear);
+			if(bck != null && bck->Enclose(data)) 
+				bck->Free(data, clear);
 		}
 	}
 
 	void Pool::FreeAll()
 	{
-		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX(); i++)
+		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX; i++)
 		{
 			PtrBlock bck = _Blocks[i];
 			if(bck == null) 
@@ -146,7 +145,7 @@ namespace amot
 
 	void Pool::Optimize()
 	{
-		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX(); i++)
+		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX; i++)
 		{
 			PtrBlock bck = _Blocks[i];
 			if(bck == null)
@@ -162,7 +161,7 @@ namespace amot
 			}
 		}
 		uint32 gp_count = 0;
-		for(uint32 i=0; i<_Config->GP_BLOCK_COUNT_MAX(); i++)
+		for(uint32 i=0; i<_Config->GP_BLOCK_COUNT_MAX; i++)
 			if(_Blocks[i] != null)
 				++gp_count;
 		if(gp_count == 0)
