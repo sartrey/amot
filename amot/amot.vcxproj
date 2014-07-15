@@ -87,12 +87,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="amot.h" />
     <ClInclude Include="amot_base.h" />
     <ClInclude Include="amot_block.h" />
     <ClInclude Include="amot_block_fl.h" />
-    <ClInclude Include="amot_block_gp.h" />
-    <ClInclude Include="amot_config.h" />
-    <ClInclude Include="amot_const.h" />
+    <ClInclude Include="amot_block_gp1.h" />
+    <ClInclude Include="amot_factory.h" />
+    <ClInclude Include="amot_setting.h" />
     <ClInclude Include="amot_pool.h" />
     <ClInclude Include="amot_record.h" />
     <ClInclude Include="resource.h" />
@@ -101,8 +102,8 @@
     <ClCompile Include="amot_base.cpp" />
     <ClCompile Include="amot_block.cpp" />
     <ClCompile Include="amot_block_fl.cpp" />
-    <ClCompile Include="amot_block_gp.cpp" />
-    <ClCompile Include="amot_config.cpp" />
+    <ClCompile Include="amot_block_gp1.cpp" />
+    <ClCompile Include="amot_setting.cpp" />
     <ClCompile Include="amot_pool.cpp" />
     <ClCompile Include="amot_record.cpp" />
     <ClCompile Include="dllmain.cpp" />

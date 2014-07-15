@@ -8,13 +8,15 @@ namespace amot
 	class Record
 	{
 	public:
-		Record();
-		Record(uint32 offset, uint32 length, Record* next = null);
-		~Record();
-	public:
 		Record* Next;
 		uint32 Offset;
 		uint32 Length;
+
+	public:
+		Record();
+		Record(uint32 offset, uint32 length, Record* next = null);
+		~Record();
+
 	public:
 		//return first non-zero rec from self
 		//offset will less than offset_max if offset_max > 0
@@ -25,5 +27,5 @@ namespace amot
 		Record* NextZero(uint32 offset_max = 0);
 	};
 
-	typedef Record* PtrRecord;
+	typedef Record* PRecord;
 }

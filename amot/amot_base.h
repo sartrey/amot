@@ -1,9 +1,36 @@
 #pragma once
 
-#include "amot_const.h"
+#include <vector>
+#include <iostream>
+#include <stdexcept>
+#include <cmath>
+
+#include "windows.h" //#IFDEF
+
+#ifdef AMOT_EXPORTS
+	#define AMOT_API __declspec(dllexport)
+#else
+	#define AMOT_API __declspec(dllimport)
+#endif
 
 namespace amot
 {
+	#define null 0
+
+	//define type
+	typedef void* raw;
+	typedef unsigned char byte;
+	typedef char int8;
+	typedef short int16;
+	typedef int int32;
+	typedef long long int64;
+	typedef unsigned char uint8;
+	typedef unsigned short uint16;
+	typedef unsigned int uint32;
+	typedef unsigned long long uint64;
+	typedef float real32;
+	typedef double real64;
+
 	//block count max
 	#define AMOT_BLOCK_COUNT_MAX 1048576
 
@@ -15,24 +42,19 @@ namespace amot
 	#define AMOT_BLOCK_LEVEL_MIN 1
 	#define AMOT_BLOCK_LEVEL_MAX 11
 
-	//block type
-	#define AMOT_BLOCK_TYPE_GP 0 //General Purpose
-	#define AMOT_BLOCK_TYPE_FL 1 //Fixed Length
+	enum BlockType
+	{
+		AMOT_BLOCK_TYPE_GP1 = 0,
+		AMOT_BLOCK_TYPE_GP2 = 1,
+		AMOT_BLOCK_TYPE_FL = 2
+	};
 
-	const cstr AMOT_ERR_0 = "invalid memory block level";
-	const cstr AMOT_ERR_1 = "too many memory blocks";
-	const cstr AMOT_ERR_2 = "incredible error"; //just a joke
-
-	AMOT_API void AssertBlockLevel(uint8 level);
-
-	//get block size at specific level
-	AMOT_API uint32 GetBlockVol(uint8 level);
-
-	//get block count for unit at specific level
-	AMOT_API uint32 GetBlockVol(uint8 level, uint32 unit);
-
-	//get min block level for size
-	AMOT_API uint8 GetMinBlockLevel(uint32 size);
+	enum Error
+	{
+		AMOT_ERROR_UNKNOWN = 0,	//unknown error
+		AMOT_ERROR_LEVEL = 1,	//invalid memory block level
+		AMOT_ERROR_BLOCK = 2,	//too many memory blocks
+	};
 
 	//interface: disposable object
 	class AMOT_API IDisposable
@@ -40,5 +62,32 @@ namespace amot
 	public:
 		//default <destructor>
 		virtual bool Dispose() = 0;
+	};
+
+	void ValidBlockLevel(uint8 level);
+
+	//get block size at specific level
+	uint32 GetBlockVolume(uint8 level);
+
+	//get min block level for size
+	uint8 GetMinBlockLevel(uint32 size);
+
+	//spin lock
+	class Lock
+	{
+	private:
+		//TRUE - Lock , FALSE - Unlock
+		uint64* _Core;
+
+	public:
+		Lock();
+		~Lock();
+
+	public:
+		//capture lock
+		void Enter();
+
+		//release lock
+		void Leave();
 	};
 }

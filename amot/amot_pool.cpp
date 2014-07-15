@@ -1,90 +1,74 @@
 #include "amot_pool.h"
+#include "amot_setting.h"
+#include "amot_factory.h"
 #include "amot_block_gp.h"
 #include "amot_block_fl.h"
 
 namespace amot
 {
-	Pool::Pool(PtrConfig config)
+	Pool::Pool(Setting* setting)
 	{
-		_Config = (config == null ? new Config() : config);
-		uint32 block_total = _Config->BLOCK_COUNT_MAX;
+		_Setting = (setting == null ? new Setting() : setting);
+		_BlockTotal = _Setting->MaxBlockCount();
 
-		_Blocks = new PtrBlock[block_total];
-		for(uint32 i=0; i<block_total; i++) 
+		_Blocks = new PBlock[_BlockTotal];
+		for (uint32 i = 0; i < _BlockTotal; i++)
 			_Blocks[i] = null;
 
-		//GP | FL | ...
-		//e.g. GP:2|FL:4| => {2,6}
-		_BlockOffsets = new uint32[2];
-		_BlockOffsets[0] = _Config->GP_BLOCK_COUNT_MAX;
-		_BlockOffsets[1] = _BlockOffsets[0] + _Config->FL_BLOCK_COUNT_MAX;
-		//more block type ...
-
-		PtrBlock bck = new BlockGP(_Config->USER_BLOCK_LEVEL_MIN);
-		_Blocks[0] = bck;
+		_Rebuild();
 	}
 
 	Pool::~Pool()
 	{
 		if(_Blocks != null) 
 		{
-			for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX; i++)
+			for (uint32 i = 0; i<_Setting->MaxBlockCount(); i++)
 				if(_Blocks[i] != null)
 					delete _Blocks[i];
-			delete [] _Blocks;
+			delete _Blocks;
 		}
-		if(_Config != null)
-			delete _Config;
+		if(_Setting != null)
+			delete _Setting;
 	}
 
-	object Pool::_Alloc(uint32 size, uint32 count)
+	raw Pool::_Allocate(uint32 size)
 	{
-		uint32 len = size * count;
-		if(len == 0 || len > AMOT_BLOCK_SIZE_MAX)
+		if (size == 0 || size > AMOT_BLOCK_SIZE_MAX)
 			return null;
 
-		//1st try: fixed length
-		for(uint32 i=_BlockOffsets[0]; i<_BlockOffsets[1]; i++)
+		//1st : try to allocate memory
+		for (uint32 i = 0; i<_BlockTotal; i++)
 		{
-			if(_Blocks[i] == null) 
+			PBlock block = _Blocks[i];
+			if(block == null)
 				continue;
-			object data = _Blocks[i]->Alloc(len);
+			raw data = block->Alloc(size);
 			if(data != null) 
 				return data;
 		}
 
-		//2nd try: general purpose
-		for(uint32 i=0; i<_BlockOffsets[0]; i++)
+		//2nd : try to create block
+		PBlock block = _Expand(size);
+		if(block != null)
 		{
-			if(_Blocks[i] == null)
-				continue;
-			object data = _Blocks[i]->Alloc(len);
-			if(data != null) 
-				return data;
-		}
-
-		//expand block
-		PtrBlock bck = _Expand(len);
-		if(bck != null)
-		{
-			object data = bck->Alloc(len);
+			raw data = block->Alloc(size);
 			if(data == null) 
-				throw new bad_exception(AMOT_ERR_2);
+				throw AMOT_ERROR_BLOCK;
 			else return data;
 		}
 		return null;
 	}
 
-	void Pool::_Dispose(object data, uint32 size)
+	void Pool::_Dispose(raw data, uint32 size)
 	{
-		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX; i++)
+		for (uint32 i = 0; i < _BlockTotal; i++)
 		{
-			PtrBlock bck = _Blocks[i];
-			if(bck == null || !bck->Enclose(data)) 
+			PBlock block = _Blocks[i];
+			if (block == null || !block->Enclose(data))
 				continue;
-			uint32 count = bck->Count(data, size);
+			uint32 count = block->Count(data, size);
 			uint32 addr = (uint32)data;
-			for(uint32 i = 0; i<count; i++)
+			for (uint32 i = 0; i < count; i++)
 			{
 				((IDisposable*)addr)->Dispose();
 				addr += size;
@@ -92,52 +76,54 @@ namespace amot
 		}
 	}
 
-	PtrBlock Pool::_Expand(uint32 len)
+	PBlock Pool::_Expand(uint32 size)
 	{
-		uint8 lvl = GetMinBlockLevel(len);
-		//GP block
-		for(uint32 i=0; i<_BlockOffsets[0]; i++)
+		uint8 lvl = GetMinBlockLevel(size);
+		Factory* factory = Factory::Instance();
+		for (uint32 i = 0; i<_BlockTotal; i++)
 		{
 			if(_Blocks[i] == null)
 			{
-				_Blocks[i] = new BlockGP(lvl);
+				_Blocks[i] = factory->CreateBlock(
+					_Setting->BlockType(), lvl);
 				return _Blocks[i];
 			}
 		}
 		return null;
 	}
 
-	PtrBlock Pool::_Rebuild()
+	PBlock Pool::_Rebuild()
 	{
-		PtrBlock bck = new BlockGP(_Config->USER_BLOCK_LEVEL_MIN);
-		_Blocks[0] = bck;
-		return bck;
+		Factory* factory = Factory::Instance();
+		PBlock block = factory->CreateBlock(
+			_Setting->BlockType(), _Setting->MinBlockLevel());
+		_Blocks[0] = block;
+		return block;
 	}
 
-	bool Pool::Expand(uint32 len)
+	bool Pool::Expand(raw data, uint32 size)
 	{
-		PtrBlock bck = _Expand(len);
-		return (bck != null);
+		return false;
 	}
 
-	void Pool::Free(object data, bool clear)
+	void Pool::Free(raw data, bool clear)
 	{
-		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX; i++)
+		for (uint32 i = 0; i < _BlockTotal; i++)
 		{
-			Block* bck = _Blocks[i];
-			if(bck != null && bck->Enclose(data)) 
-				bck->Free(data, clear);
+			Block* block = _Blocks[i];
+			if (block != null && block->Enclose(data))
+				block->Free(data, clear);
 		}
 	}
 
 	void Pool::FreeAll()
 	{
-		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX; i++)
+		for (uint32 i = 0; i < _BlockTotal; i++)
 		{
-			PtrBlock bck = _Blocks[i];
-			if(bck == null) 
+			PBlock block = _Blocks[i];
+			if (block == null)
 				continue;
-			delete bck;
+			delete block;
 			_Blocks[i] = null;
 		}
 		_Rebuild();
@@ -145,72 +131,25 @@ namespace amot
 
 	void Pool::Optimize()
 	{
-		for(uint32 i=0; i<_Config->BLOCK_COUNT_MAX; i++)
+		int block_count = 0;
+		for (uint32 i = 0; i < _BlockTotal; i++)
 		{
-			PtrBlock bck = _Blocks[i];
-			if(bck == null)
+			PBlock block = _Blocks[i];
+			if (block == null)
 				continue;
-			if(bck->UsedSize() == 0)
+			if (block->UsedSize() == 0)
 			{
-				delete bck;
+				delete block;
 				_Blocks[i] = null;
 			}
 			else
 			{
-				bck->Optimize();
+				block->Optimize();
 			}
+			if (block != null)
+				block_count++;
 		}
-		uint32 gp_count = 0;
-		for(uint32 i=0; i<_Config->GP_BLOCK_COUNT_MAX; i++)
-			if(_Blocks[i] != null)
-				++gp_count;
-		if(gp_count == 0)
+		if (block_count == 0)
 			_Rebuild();
-	}
-
-	void Pool::Sign(uint32 size, uint32 count)
-	{
-		bool has_null = false;
-		uint32 idx = 0;
-		//FL block
-		for(uint32 i=_BlockOffsets[0]; i<_BlockOffsets[1]; i++)
-		{
-			if(_Blocks[i] != null)
-			{
-				BlockFL* bck = dynamic_cast<BlockFL*>(_Blocks[i]);
-				if(size == bck->Unit()) 
-					return;
-			}
-			else 
-			{
-				idx = i;
-				has_null = true;
-			}
-		}
-		if(has_null) 
-		{
-			uint8 lvl = GetMinBlockLevel(size * count);
-			BlockFL* bck = new BlockFL(lvl, size);
-			_Blocks[idx] = bck;
-		}
-	}
-
-	void Pool::Unsign(uint32 size)
-	{
-		for(uint32 i=_BlockOffsets[0]; i<_BlockOffsets[1]; i++)
-		{
-			if(_Blocks[i] != null)
-			{
-				BlockFL* bck = dynamic_cast<BlockFL*>(_Blocks[i]);
-				if(size == bck->Unit()) 
-				{
-					if(bck->UsedSize() == 0)
-					{
-						delete bck;
-						_Blocks[i] = null;
-					}
-				}
-			}
-		}
 	}
 }

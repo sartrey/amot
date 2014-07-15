@@ -1,25 +1,25 @@
-#include "amot_block_gp.h"
+#include "amot_block_gp1.h"
 
 namespace amot
 {
-	BlockGP::BlockGP(uint8 level)
-		: Block(level, AMOT_BLOCK_TYPE_GP)
+	BlockGP1::BlockGP1(uint8 level)
+		: Block(level)
 	{
-		_Size = GetBlockVol(level);
+		_Size = GetBlockVolume(level);
 		_Data = new byte[_Size];
 		memset(_Data, 0, _Size);
 		_FirstRecord = null;
 	}
 
-	BlockGP::~BlockGP()
+	BlockGP1::~BlockGP1()
 	{
 		ClearRecord();
 	}
 
-	uint32 BlockGP::UsedSize()
+	uint32 BlockGP1::UsedSize()
 	{
 		uint32 result = 0;
-		PtrRecord rec = _FirstRecord;
+		PRecord rec = _FirstRecord;
 		while(rec != null)
 		{
 			result += rec->Length;

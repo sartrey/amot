@@ -2,29 +2,20 @@
 
 namespace amot
 {
-	void AssertBlockLevel(uint8 level)
+	void ValidBlockLevel(uint8 level)
 	{
 		if(level < AMOT_BLOCK_LEVEL_MIN 
 		|| level > AMOT_BLOCK_LEVEL_MAX)
 		{
-			throw new invalid_argument(AMOT_ERR_0);
+			throw AMOT_ERROR_LEVEL;
 		}
 	}
 
-	uint32 GetBlockVol(uint8 level)
+	uint32 GetBlockVolume(uint8 level)
 	{
-		AssertBlockLevel(level);
+		ValidBlockLevel(level);
 		uint32 result = (uint32)(pow(4.0f, level - 1)) * 1024;
 		return result;
-	}
-
-	uint32 GetBlockVol(uint8 level, uint32 unit)
-	{
-		AssertBlockLevel(level);
-		uint32 size = (uint32)(pow(4.0f, level - 1)) * 1024;
-		uint32 count = size / unit;
-		count = count - count % 8;
-		return count;
 	}
 
 	uint8 GetMinBlockLevel(uint32 size)
@@ -36,7 +27,31 @@ namespace amot
 			real_size *= 4;
 			++lvl;
 		}
-		if(lvl > AMOT_BLOCK_LEVEL_MAX) return 0;
+		if(lvl > AMOT_BLOCK_LEVEL_MAX) 
+			return 0;
 		return lvl;
+	}
+
+	Lock::Lock()
+	{
+		_Core = (uint64*)_aligned_malloc(1, sizeof(uint64));
+		InterlockedExchange(_Core, FALSE);
+	}
+
+	Lock::~Lock()
+	{
+		InterlockedExchange(_Core, FALSE);
+		_aligned_free(_Core);
+	}
+
+	void Lock::Enter()
+	{
+		while (InterlockedExchange(_Core, TRUE) == TRUE)
+			Sleep(0);
+	}
+
+	void Lock::Leave()
+	{
+		InterlockedExchange(_Core, FALSE);
 	}
 }

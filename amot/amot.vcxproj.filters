@@ -24,15 +24,6 @@
     <ClInclude Include="amot_block_fl.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="amot_block_gp.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="amot_config.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="amot_const.h">
-      <Filter>header</Filter>
-    </ClInclude>
     <ClInclude Include="amot_pool.h">
       <Filter>header</Filter>
     </ClInclude>
@@ -40,6 +31,18 @@
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="amot.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="amot_setting.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="amot_factory.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="amot_block_gp1.h">
       <Filter>header</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,12 +56,6 @@
     <ClCompile Include="amot_block_fl.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="amot_block_gp.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="amot_config.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="amot_pool.cpp">
       <Filter>source</Filter>
     </ClCompile>
@@ -66,6 +63,12 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="amot_setting.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="amot_block_gp1.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
