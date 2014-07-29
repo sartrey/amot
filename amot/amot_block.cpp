@@ -2,27 +2,48 @@
 
 namespace amot
 {
-	Block::Block(uint8 level, uint8 type)
+	Block::Block(uint8 level, uint32 support)
 	{
-		_Type = type;
-		_Level = level;
+		_Size = GetBlockVolume(level);
+		_Data = new byte[_Size];
+		_Support = support;
 	}
 
 	Block::~Block()
 	{
 		if(_Data != null)
-			delete [] _Data;
+			delete _Data;
 	}
 
-	bool Block::Enclose(object data)
+	bool Block::Enclose(raw data)
 	{
 		uint32 d1 = (uint32)_Data;
 		uint32 d2 = (uint32)data;
 		return (d2 >= d1 && d2 < d1 + _Size);
 	}
 
-	object Block::Offset(uint32 offset)
+	raw Block::Offset(uint32 offset)
 	{
-		return (object)((uint32)_Data + offset);
+		return (raw)((uint32)_Data + offset);
+	}
+
+	raw Block::Allocate(uint32)
+	{
+		throw amot_err2;
+	}
+
+	void Block::Free(raw, bool)
+	{
+		throw amot_err2;
+	}
+
+	void Block::Resize(raw, uint32)
+	{
+		throw amot_err2;
+	}
+
+	void Block::Trim(raw)
+	{
+		throw amot_err2;
 	}
 }

@@ -5,24 +5,26 @@ namespace amot
 	Setting::Setting()
 	{
 		_HasLock = false;
-		_BlockType = AMOT_BLOCK_TYPE_GP1;
+		_DefaultBlockType = AMOT_BLOCK_GP1;
 		_MinBlockLevel = 1;
 		_MaxBlockLevel = 11;
-		_MaxPoolVolume = GetBlockVolume(2);
+		_MaxPoolVolume = GetBlockVolume(4);
 	}
 
 	Setting::~Setting()
 	{
 	}
 
+	//----- ----- ----- ----- ----- -----
+
 	bool Setting::HasLock()
 	{
 		return _HasLock;
 	}
 
-	uint8 Setting::BlockType()
+	uint8 Setting::DefaultBlockType()
 	{
-		return _BlockType;
+		return _DefaultBlockType;
 	}
 
 	uint8 Setting::MinBlockLevel()
@@ -40,6 +42,7 @@ namespace amot
 		return _MaxPoolVolume;
 	}
 
+	//----- ----- ----- ----- ----- -----
 
 	void Setting::SetHasLock(bool value)
 	{
@@ -48,7 +51,7 @@ namespace amot
 
 	void Setting::SetBlockType(uint8 value)
 	{
-		_BlockType = value;
+		_DefaultBlockType = value;
 	}
 
 	void Setting::SetMinBlockLevel(uint8 value)
@@ -66,9 +69,15 @@ namespace amot
 		_MaxPoolVolume = value;
 	}
 
+	//----- ----- ----- ----- ----- -----
 
 	uint32 Setting::MaxBlockCount()
 	{
 		return _MaxPoolVolume / GetBlockVolume(_MinBlockLevel);
+	}
+
+	uint32 Setting::MaxBlockSize()
+	{
+		return GetBlockVolume(_MaxBlockLevel);
 	}
 }

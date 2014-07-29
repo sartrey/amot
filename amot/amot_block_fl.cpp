@@ -3,39 +3,44 @@
 namespace amot
 {
 	BlockFL::BlockFL(uint8 level, uint32 unit)
-			: Block(level, AMOT_BLOCK_TYPE_FL)
+		: Block(level,
+		AMOT_ACTION_ALLOC |
+		AMOT_ACTION_FREE |
+		AMOT_ACTION_RESIZE |
+		AMOT_ACTION_TRIM)
 	{
+		uint32 max_vol = GetBlockVolume(level);
+		uint32 max_unit = max_vol / unit;
+		_Total = max_unit / 8;
+		_Size = max_unit * unit; //real size
 		_Unit = unit;
-		uint32 total_var = GetBlockVol(level, unit);
-		_TotalRec = total_var / 8;
-		_Size = total_var * unit;
 
 		_Data = new byte[_Size];
-		_Record = new byte[_TotalRec];
+		_Record = new byte[_Total];
 		memset(_Data, 0, _Size);
-		memset(_Record, 0, _TotalRec);
+		memset(_Record, 0, _Total);
 	}
 
 	BlockFL::~BlockFL()
 	{
-		if(_Record != null)
-			delete [] _Record;
+		if (_Record != null)
+			delete _Record;
 	}
 
 	uint32 BlockFL::UsedSize()
 	{
-		uint32 uc = 0;
-		for(uint32 i=0; i<_TotalRec; i++)
+		uint32 count = 0;
+		for (uint32 i = 0; i < _Total; i++)
 		{
 			byte tmp = _Record[i];
-			for(int j=0; j<8; j++)
+			for (byte j = 0; j < 8; j++)
 			{
-				uc += (tmp & 0x01);
+				count += (tmp & 0x1);
 				tmp >>= 1;
 			}
 		}
-		uint32 us = uc * _Unit;
-		return us;
+		uint32 size = count * _Unit;
+		return size;
 	}
 
 	uint32 BlockFL::FreeSize()
@@ -43,49 +48,51 @@ namespace amot
 		return _Size - UsedSize();
 	}
 
-	uint32 BlockFL::Count(object data, uint32 size)
+	uint32 BlockFL::Count(raw data, uint32 unit)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
-		if(offset % _Unit != 0) return 0;
-		uint32 count = _Unit / size;
+		if(offset % _Unit != 0) 
+			return 0;
+		uint32 count = _Unit / unit;
 		return count;
 	}
 
-	object BlockFL::Alloc(uint32 len)
+	raw BlockFL::Allocate(uint32 size)
 	{
-		if(len != _Unit) return null;
+		if (size != _Unit)
+			return null;
 		uint32 offset = 0;
-		for(uint32 i=0; i<_TotalRec; i++)
+		for (uint32 i = 0; i < _Total; i++)
 		{
 			byte tmp = _Record[i];
-			if(tmp == 0xFF)
+			if (tmp == 0xFF)
 			{
 				offset += 8;
 				continue;
 			}
-			for(byte j=7; j>=0; j--)
+			for (byte j = 7; j >= 0; j--)
 			{
-				if((tmp >> j) & 0x01) ++offset;
+				if ((tmp >> j) & 0x01) ++offset;
 				else
 				{
 					_Record[i] = tmp | (0x01 << j);
-					return (object)((uint32)_Data + offset * _Unit);
+					return (raw)((uint32)_Data + offset * _Unit);
 				}
 			}
 		}
 		return null;
 	}
 
-	void BlockFL::Free(object data, bool clear)
+	void BlockFL::Free(raw data, bool clear)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
-		if(offset % _Unit == 0)
+		if (offset % _Unit == 0)
 		{
 			offset = offset / _Unit;
-			if(clear) 
+			if (clear)
 				memset(data, 0, _Unit);
 			byte tmp = 0xFF ^ (0x01 << (7 - offset % 8));
-			_Record[offset/8] &= tmp;
+			_Record[offset / 8] &= tmp;
 		}
 	}
 

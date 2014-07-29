@@ -5,7 +5,7 @@
 
 namespace amot
 {
-	//block GP1 : chain table
+	//block GP1 : linked list
 	class BlockGP1 : public Block
 	{
 	private:
@@ -17,5 +17,17 @@ namespace amot
 
 	private:
 		void ClearRecord();
+
+	public:
+		uint32 UsedSize();
+		uint32 FreeSize();
+		uint32 Count(raw data, uint32 unit);
+
+		raw Allocate(uint32 size);
+		void Free(raw data, bool clear = false);
+		//void Resize(raw data, uint32 size);
+		//void Trim(raw data);
+
+		void Optimize();
 	};
 }

@@ -3,7 +3,11 @@
 namespace amot
 {
 	BlockGP1::BlockGP1(uint8 level)
-		: Block(level)
+		: Block(level, 
+		AMOT_ACTION_ALLOC | 
+		AMOT_ACTION_FREE |
+		AMOT_ACTION_RESIZE | 
+		AMOT_ACTION_TRIM)
 	{
 		_Size = GetBlockVolume(level);
 		_Data = new byte[_Size];
@@ -22,39 +26,41 @@ namespace amot
 		PRecord rec = _FirstRecord;
 		while(rec != null)
 		{
-			result += rec->Length;
+			result += rec->Size;
 			rec = rec->Next;
 		}
 		return result;
 	}
 
-	uint32 BlockGP::FreeSize()
+	uint32 BlockGP1::FreeSize()
 	{
 		return _Size - UsedSize();
 	}
 
-	uint32 BlockGP::Count(object data, uint32 size)
+	uint32 BlockGP1::Count(raw data, uint32 unit)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
-		PtrRecord rec = _FirstRecord;
-		while(rec != null)
+		PRecord rec = _FirstRecord;
+		while (rec != null)
 		{
-			if(rec->Offset != offset)
+			if (rec->Offset != offset)
 				rec = rec->Next;
 			else
 			{
-				uint32 count = rec->Length / size;
+				uint32 count = rec->Size / unit;
 				return count;
 			}
 		}
 		return 0;
 	}
 
-	object BlockGP::Alloc(uint32 len)
+
+	raw BlockGP1::Allocate(uint32 size)
 	{
-		if(len > _Size) return null;
-		PtrRecord rec;
-		PtrRecord rec_zero;
+		if(size > _Size) 
+			return null;
+		PRecord rec;
+		PRecord rec_zero;
 		rec = _FirstRecord->NextNonzero();
 		if(rec == null) //empty block
 		{
@@ -62,70 +68,70 @@ namespace amot
 			if(rec_zero != null)
 			{
 				rec_zero->Offset = 0;
-				rec_zero->Length = len;
+				rec_zero->Size = size;
 				return _Data;
 			}
 			else
 			{
-				PtrRecord rec_new = new Record(0, len);
+				PRecord rec_new = new Record(0, size);
 				_FirstRecord = rec_new;
 				return _Data;
 			}
 		}
-		else if(rec->Offset > 0 && len <= rec->Offset) //left space
+		else if(rec->Offset > 0 && size <= rec->Offset) //left space
 		{
 			rec_zero = _FirstRecord->NextZero(rec->Offset);
 			if(rec_zero != null)
 			{
 				rec_zero->Offset = 0;
-				rec_zero->Length = len;
+				rec_zero->Size = size;
 				return _Data;
 			}
 			else
 			{
-				PtrRecord rec_new = new Record(0, len, rec);
+				PRecord rec_new = new Record(0, size, rec);
 				_FirstRecord = rec_new;
 				return _Data;
 			}
 		}
 		//gap space
-		uint32 offset_end = rec->Offset + rec->Length;
-		PtrRecord rec_next = rec->Next->NextNonzero();
+		uint32 offset_end = rec->Offset + rec->Size;
+		PRecord rec_next = rec->Next->NextNonzero();
 		while(rec_next != null)
 		{
-			if(rec_next->Offset - offset_end >= len)
+			if(rec_next->Offset - offset_end >= size)
 			{
 				rec_zero = rec->Next->NextZero(rec_next->Offset);
 				if(rec_zero != null)
 				{
 					rec_zero->Offset = offset_end;
-					rec_zero->Length = len;
+					rec_zero->Size = size;
 					return Offset(offset_end);
 				}
 				else
 				{
-					PtrRecord rec_new = new Record(offset_end, len, rec_next);
+					PRecord rec_new = new Record(offset_end, size, rec_next);
 					rec->Next = rec_new;
 					return Offset(offset_end);
 				}
 			}
 			rec = rec_next;
 			rec_next = rec->Next->NextNonzero();
-			offset_end = rec->Offset + rec->Length;
+			offset_end = rec->Offset + rec->Size;
 		}
 		//right space
-		if(_Size - offset_end >= len)
+		if(_Size - offset_end >= size)
 		{
 			rec_zero = rec->Next;
 			if(rec_zero != null) //must be zero rec
 			{
 				rec_zero->Offset = offset_end;
-				rec_zero->Length = len;
+				rec_zero->Size = size;
 				return Offset(offset_end);
 			}
 			else
 			{
-				PtrRecord rec_new = new Record(offset_end, len);
+				PRecord rec_new = new Record(offset_end, size);
 				rec->Next = rec_new;
 				return Offset(offset_end);
 			}
@@ -133,10 +139,10 @@ namespace amot
 		return null;
 	}
 
-	void BlockGP::Free(object data, bool clear)
+	void BlockGP1::Free(raw data, bool clear)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
-		PtrRecord rec = _FirstRecord;
+		PRecord rec = _FirstRecord;
 		while(rec != null)
 		{
 			if(rec->Offset != offset) 
@@ -144,22 +150,22 @@ namespace amot
 			else
 			{
 				if(clear) 
-					memset(data, 0, rec->Length);
-				rec->Length = 0;
+					memset(data, 0, rec->Size);
+				rec->Size = 0;
 				break;
 			}
 		}
 	}
 
-	void BlockGP::Optimize()
+	void BlockGP1::Optimize()
 	{
-		PtrRecord rec = _FirstRecord;
-		PtrRecord rec_tmp = null;
-		PtrRecord rec_last = null;
+		PRecord rec = _FirstRecord;
+		PRecord rec_tmp = null;
+		PRecord rec_last = null;
 		_FirstRecord = _FirstRecord->NextNonzero();
 		while(rec != null)
 		{
-			if(rec->Length == 0)
+			if(rec->Size == 0)
 			{
 				rec_tmp = rec->Next;
 				if(rec_last != null)
@@ -175,12 +181,12 @@ namespace amot
 		}
 	}
 
-	void BlockGP::ClearRecord()
+	void BlockGP1::ClearRecord()
 	{
-		PtrRecord rec = _FirstRecord;
+		PRecord rec = _FirstRecord;
 		while(rec != null)
 		{
-			PtrRecord next = rec->Next;
+			PRecord next = rec->Next;
 			delete rec;
 			rec = next;
 		}

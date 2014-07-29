@@ -7,7 +7,7 @@ namespace amot
 		if(level < AMOT_BLOCK_LEVEL_MIN 
 		|| level > AMOT_BLOCK_LEVEL_MAX)
 		{
-			throw AMOT_ERROR_LEVEL;
+			throw amot_err3;
 		}
 	}
 

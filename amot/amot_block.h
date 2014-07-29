@@ -4,40 +4,52 @@
 
 namespace amot
 {
-	//memory block
-	class Block
+	//{base} memory block
+	class AMOT_API Block
 	{
 	protected:
+		uint32 _Support;
 		uint32 _Size;
 		raw _Data;
 
 	public:
-		Block(uint8 level);
+		Block(uint8 level, uint32 support);
 		virtual ~Block();
 
 	public:
-		//test if address can be included in block
+		//test if address in block
 		bool Enclose(raw data);
 
-		//get pointer at specific offset from head
+		//get pointer by offset from head
 		raw Offset(uint32 offset);
 
-		//get count of object(s) at specific address in block
-		//return 0 if object NOT existed in block
-		virtual uint32 Count(raw data, uint32 size) = 0;
+		//test if action supported
+		bool Support(uint32 action);
 
+	public:
 		//get used size of block
 		virtual uint32 UsedSize() = 0;
 
 		//get free size of block
 		virtual uint32 FreeSize() = 0;
 
-		//allocate memory as specific length
-		virtual raw Alloc(uint32 len) = 0;
+		//get object(s) count at address
+		virtual uint32 Count(raw data, uint32 unit) = 0;
 
-		//free specific object
-		virtual void Free(raw data, bool clear = false) = 0;
+	public:
+		//allocate space in size
+		virtual raw Allocate(uint32 size);
 
+		//free space
+		virtual void Free(raw data, bool clear = false);
+
+		//resize space
+		virtual void Resize(raw data, uint32 size);
+
+		//trim space
+		virtual void Trim(raw data);
+
+	public:
 		//optimize block storage
 		virtual void Optimize() = 0;
 	};

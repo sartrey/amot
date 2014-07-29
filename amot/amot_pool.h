@@ -4,41 +4,55 @@
 
 namespace amot
 {
-	class Block;
 	class Setting;
-	class Factory;
-
+	class Block;
 	typedef Block* PBlock;
 
-	//{base} memory pool
+	//memory pool
 	class AMOT_API Pool
 	{
 	private:
 		Setting* _Setting;
-		Factory* _Factory;
 		Lock* _Lock;
 		PBlock* _Blocks;
 
 	private:
-		uint32 _BlockTotal;
+		uint32 _MaxBlockCount;
+		uint32 _MaxBlockSize;
 
 	public:
 		Pool(Setting* setting = null);
 		~Pool();
 
 	private:
-		raw _Allocate(uint32 size);
-		void _Dispose(raw data, uint32 size);
-		Block* _Expand(uint32 len);
-		Block* _Rebuild();
+		PBlock Expand(uint32 size);
+		PBlock Rebuild();
+		void ToDispose(raw data, uint32 unit);
 
 	public:
-		//allocate memory
+		//allocate space
+		raw Allocate(uint32 size);
+
+		//free space
+		void Free(raw data, bool clear = false);
+
+		//free all space
+		void FreeAll();
+
+		//resize space
+		void Resize(raw data, uint32 size);
+
+		//trim space by data
+		void Trim(raw data);
+
+	public:
+		//new object
 		template<typename T>
-		T* Alloc(uint32 count = 1, bool ctor = false)
+		T* New(uint32 count = 1, bool ctor = false)
 		{
-			uint32 size = sizeof(T);
-			raw data = _Alloc(size, count);
+			uint32 unit = sizeof(T);
+			uint32 size = unit * count;
+			raw data = Allocate(size);
 			if(ctor)
 			{
 				uint32 addr = (uint32)data;
@@ -51,22 +65,17 @@ namespace amot
 			return (T*)data;
 		}
 
-		//expand memory
-		bool Expand(raw data, uint32 size);
-
 		//dispose object
 		template<typename T>
 		void Dispose(T* data)
 		{
-			uint32 size = sizeof(T);
-			_Dispose(data, size);
+			uint32 unit = sizeof(T);
+			ToDispose(data, unit);
 		}
 
-		//free memory
-		void Free(raw data, bool clear = false);
-
-		//free all memory
-		void FreeAll();
+	public:
+		//mount user block
+		void Mount(PBlock block);
 
 		//optimize pool
 		void Optimize();

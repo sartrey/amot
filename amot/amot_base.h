@@ -42,19 +42,25 @@ namespace amot
 	#define AMOT_BLOCK_LEVEL_MIN 1
 	#define AMOT_BLOCK_LEVEL_MAX 11
 
-	enum BlockType
+	enum BlockEnum
 	{
-		AMOT_BLOCK_TYPE_GP1 = 0,
-		AMOT_BLOCK_TYPE_GP2 = 1,
-		AMOT_BLOCK_TYPE_FL = 2
+		AMOT_BLOCK_GP1 = 0,
+		AMOT_BLOCK_GP2 = 1,
+		AMOT_BLOCK_FL = 2
 	};
 
-	enum Error
+	enum ActionEnum
 	{
-		AMOT_ERROR_UNKNOWN = 0,	//unknown error
-		AMOT_ERROR_LEVEL = 1,	//invalid memory block level
-		AMOT_ERROR_BLOCK = 2,	//too many memory blocks
+		AMOT_ACTION_ALLOC = 1,
+		AMOT_ACTION_FREE = 2,
+		AMOT_ACTION_RESIZE = 4,
+		AMOT_ACTION_TRIM = 8
 	};
+
+	const int amot_err1 = 1000; //unknown
+	const int amot_err2 = 1001; //not implemented
+	const int amot_err3 = 1002; //invalid level
+	const int amot_err4 = 1003; //too many blocks
 
 	//interface: disposable object
 	class AMOT_API IDisposable
@@ -64,6 +70,7 @@ namespace amot
 		virtual bool Dispose() = 0;
 	};
 
+	//valid block level
 	void ValidBlockLevel(uint8 level);
 
 	//get block size at specific level

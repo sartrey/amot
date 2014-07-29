@@ -5,14 +5,14 @@ namespace amot
 	Record::Record()
 	{
 		Offset = 0;
-		Length = 0;
+		Size = 0;
 		Next = null;
 	}
 
-	Record::Record(uint32 offset, uint32 length, Record* next)
+	Record::Record(uint32 offset, uint32 size, Record* next)
 	{
 		Offset = offset;
-		Length = length;
+		Size = size;
 		Next = next;
 	}
 
@@ -23,7 +23,7 @@ namespace amot
 		Record* rec = this;
 		while(rec != null) 
 		{
-			if(rec->Length == 0)
+			if(rec->Size == 0)
 			{
 				if(offset_max == 0 || rec->Offset < offset_max)
 					return rec;
@@ -39,7 +39,7 @@ namespace amot
 		Record* rec = this;
 		while(rec != null) 
 		{
-			if(rec->Length > 0)
+			if(rec->Size > 0)
 			{
 				if(offset_max == 0 || rec->Offset < offset_max)
 					return rec;

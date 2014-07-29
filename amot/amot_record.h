@@ -8,13 +8,13 @@ namespace amot
 	class Record
 	{
 	public:
-		Record* Next;
 		uint32 Offset;
-		uint32 Length;
+		uint32 Size;
+		Record* Next;
 
 	public:
 		Record();
-		Record(uint32 offset, uint32 length, Record* next = null);
+		Record(uint32 offset, uint32 size, Record* next = null);
 		~Record();
 
 	public:

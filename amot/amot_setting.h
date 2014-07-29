@@ -8,7 +8,7 @@ namespace amot
 	{
 	private:
 		bool _HasLock;
-		uint8 _BlockType;
+		uint8 _DefaultBlockType;
 		uint8 _MinBlockLevel;
 		uint8 _MaxBlockLevel;
 		uint32 _MaxPoolVolume;
@@ -21,8 +21,8 @@ namespace amot
 		//get lock flag
 		bool HasLock();
 
-		//get block type
-		uint8 BlockType();
+		//get default block type
+		uint8 DefaultBlockType();
 
 		//get min block level
 		uint8 MinBlockLevel();
@@ -32,7 +32,7 @@ namespace amot
 		
 		//get max pool volume
 		uint32 MaxPoolVolume();
-	
+
 	public:
 		//set lock flag
 		void SetHasLock(bool value);
@@ -52,5 +52,8 @@ namespace amot
 	public:
 		//get max block count
 		uint32 MaxBlockCount();
+
+		//get max block size
+		uint32 MaxBlockSize();
 	};
 }

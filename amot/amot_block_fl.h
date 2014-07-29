@@ -4,19 +4,28 @@
 
 namespace amot
 {
-	//memory block fixed length
+	//block FL
 	class BlockFL : public Block
 	{
 	private:
 		uint32 _Unit;
-		uint32 _TotalRec;
 		byte* _Record;
+		uint32 _Total;
 
 	public:
 		BlockFL(uint8 level, uint32 unit);
 		~BlockFL();
 
 	public:
-		inline uint32 Unit() { return _Unit; }
+		uint32 UsedSize();
+		uint32 FreeSize();
+		uint32 Count(raw data, uint32 unit);
+
+		raw Allocate(uint32 size);
+		void Free(raw data, bool clear = false);
+		//void Resize(raw data, uint32 size);
+		//void Trim(raw data);
+
+		void Optimize();
 	};
 }
