@@ -1,20 +1,24 @@
 #pragma once
 
 #include "amot_block.h"
+#include "amot_prop_fl.h"
 
 namespace amot
 {
 	//block FL
-	class BlockFL : public Block
+	class BlockFL1 : public Block, public IBlockFL
 	{
 	private:
 		uint32 _Unit;
-		byte* _Record;
-		uint32 _Total;
+		uint8* _Record;
+		uint32 _RecordTotal;
 
 	public:
-		BlockFL(uint8 level, uint32 unit);
-		~BlockFL();
+		BlockFL1(uint8 level);
+		~BlockFL1();
+
+	public:
+		void SetUnit(uint32 unit);
 
 	public:
 		uint32 UsedSize();
@@ -26,6 +30,7 @@ namespace amot
 		//void Resize(raw data, uint32 size);
 		//void Trim(raw data);
 
+		void Reset();
 		void Optimize();
 	};
 }

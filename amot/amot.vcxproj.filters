@@ -1,80 +1,101 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="header">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="source">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include=".resource">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{21360588-ae05-4847-9269-28c6a97bc5f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="core\source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="block">
+      <UniqueIdentifier>{aedeb16a-2209-4ef2-8366-d35dc79f54e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="block\header">
+      <UniqueIdentifier>{04507dcd-7fcd-4ec9-b302-89f78726c22b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="block\source">
+      <UniqueIdentifier>{62ec34dc-5763-480a-b993-2ffc791ecf7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="amot_base.h">
-      <Filter>header</Filter>
+      <Filter>core\header</Filter>
     </ClInclude>
     <ClInclude Include="amot_block.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="amot_block_fl.h">
-      <Filter>header</Filter>
+      <Filter>core\header</Filter>
     </ClInclude>
     <ClInclude Include="amot_pool.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="amot_record.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>header</Filter>
+      <Filter>core\header</Filter>
     </ClInclude>
     <ClInclude Include="amot.h">
-      <Filter>header</Filter>
+      <Filter>core\header</Filter>
     </ClInclude>
     <ClInclude Include="amot_setting.h">
-      <Filter>header</Filter>
-    </ClInclude>
-    <ClInclude Include="amot_factory.h">
-      <Filter>header</Filter>
+      <Filter>core\header</Filter>
     </ClInclude>
     <ClInclude Include="amot_block_gp1.h">
-      <Filter>header</Filter>
+      <Filter>block\header</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>.resource</Filter>
+    </ClInclude>
+    <ClInclude Include="amot_factory.h">
+      <Filter>core\header</Filter>
+    </ClInclude>
+    <ClInclude Include="amot_block_fl1.h">
+      <Filter>block\header</Filter>
+    </ClInclude>
+    <ClInclude Include="amot_prop_fl.h">
+      <Filter>block\header</Filter>
+    </ClInclude>
+    <ClInclude Include="amot_gp_record.h">
+      <Filter>block\header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="amot_base.cpp">
-      <Filter>source</Filter>
+      <Filter>core\source</Filter>
     </ClCompile>
     <ClCompile Include="amot_block.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="amot_block_fl.cpp">
-      <Filter>source</Filter>
+      <Filter>core\source</Filter>
     </ClCompile>
     <ClCompile Include="amot_pool.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="amot_record.cpp">
-      <Filter>source</Filter>
+      <Filter>core\source</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
-      <Filter>source</Filter>
+      <Filter>core\source</Filter>
     </ClCompile>
     <ClCompile Include="amot_setting.cpp">
-      <Filter>source</Filter>
+      <Filter>core\source</Filter>
     </ClCompile>
     <ClCompile Include="amot_block_gp1.cpp">
-      <Filter>source</Filter>
+      <Filter>block\source</Filter>
+    </ClCompile>
+    <ClCompile Include="amot_factory.cpp">
+      <Filter>core\source</Filter>
+    </ClCompile>
+    <ClCompile Include="amot_block_fl1.cpp">
+      <Filter>block\source</Filter>
+    </ClCompile>
+    <ClCompile Include="amot_gp_record.cpp">
+      <Filter>block\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="amot.rc">
       <Filter>.resource</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\perf.psess" />
   </ItemGroup>
 </Project>

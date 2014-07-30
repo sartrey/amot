@@ -1,7 +1,7 @@
 #pragma once
 
 #include "amot_block.h"
-#include "amot_record.h"
+#include "amot_gp_record.h"
 
 namespace amot
 {
@@ -28,6 +28,7 @@ namespace amot
 		//void Resize(raw data, uint32 size);
 		//void Trim(raw data);
 
+		void Reset();
 		void Optimize();
 	};
 }

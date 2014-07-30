@@ -5,6 +5,7 @@
 namespace amot
 {
 	class Setting;
+	class Factory;
 	class Block;
 	typedef Block* PBlock;
 
@@ -13,7 +14,7 @@ namespace amot
 	{
 	private:
 		Setting* _Setting;
-		Lock* _Lock;
+		Factory* _Factory;
 		PBlock* _Blocks;
 
 	private:
@@ -25,9 +26,8 @@ namespace amot
 		~Pool();
 
 	private:
-		PBlock Expand(uint32 size);
 		PBlock Rebuild();
-		void ToDispose(raw data, uint32 unit);
+		PBlock Expand(uint32 size);
 
 	public:
 		//allocate space
@@ -70,10 +70,26 @@ namespace amot
 		void Dispose(T* data)
 		{
 			uint32 unit = sizeof(T);
-			ToDispose(data, unit);
+			PBlock block = Search(data);
+			if (block == null)
+			{
+				uint32 count = block->Count(data, unit);
+				uint32 addr = (uint32)data;
+				for (uint32 i = 0; i < count; i++)
+				{
+					((IDisposable*)addr)->Dispose();
+					addr += unit;
+				}
+			}
 		}
 
 	public:
+		//get factory
+		Factory* Factory();
+
+		//search block by data
+		PBlock Search(raw data);
+
 		//mount user block
 		void Mount(PBlock block);
 

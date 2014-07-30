@@ -18,9 +18,8 @@ namespace amot
 		~Record();
 
 	public:
-		//return first non-zero rec from self
-		//offset will less than offset_max if offset_max > 0
-		Record* NextNonzero(uint32 offset_max = 0);
+		//return first non-zero record from self
+		Record* NextNonzero();
 
 		//return first zero rec from self
 		//offset will less than offset_max if offset_max > 0

@@ -1,4 +1,4 @@
-#include "amot_record.h"
+#include "amot_gp_record.h"
 
 namespace amot
 {
@@ -34,19 +34,15 @@ namespace amot
 		return null;
 	}
 
-	Record* Record::NextNonzero(uint32 offset_max)
+	Record* Record::NextNonzero()
 	{
 		Record* rec = this;
 		while(rec != null) 
 		{
 			if(rec->Size > 0)
-			{
-				if(offset_max == 0 || rec->Offset < offset_max)
-					return rec;
-				return null;
-			}
+				return rec;
 			rec = rec->Next;
 		}
-		return rec;
+		return null;
 	}
 }

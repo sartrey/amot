@@ -9,6 +9,7 @@ namespace amot
 	{
 	protected:
 		uint32 _Support;
+		uint8 _Level;
 		uint32 _Size;
 		raw _Data;
 
@@ -50,6 +51,9 @@ namespace amot
 		virtual void Trim(raw data);
 
 	public:
+		//reset block
+		virtual void Reset() = 0;
+
 		//optimize block storage
 		virtual void Optimize() = 0;
 	};

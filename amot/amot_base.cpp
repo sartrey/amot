@@ -31,27 +31,4 @@ namespace amot
 			return 0;
 		return lvl;
 	}
-
-	Lock::Lock()
-	{
-		_Core = (uint64*)_aligned_malloc(1, sizeof(uint64));
-		InterlockedExchange(_Core, FALSE);
-	}
-
-	Lock::~Lock()
-	{
-		InterlockedExchange(_Core, FALSE);
-		_aligned_free(_Core);
-	}
-
-	void Lock::Enter()
-	{
-		while (InterlockedExchange(_Core, TRUE) == TRUE)
-			Sleep(0);
-	}
-
-	void Lock::Leave()
-	{
-		InterlockedExchange(_Core, FALSE);
-	}
 }

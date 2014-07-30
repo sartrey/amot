@@ -5,20 +5,15 @@
 namespace amot
 {
 	class Block;
+	typedef Block* PBlock;
 
 	class AMOT_API Factory
 	{
-	private:
-		static Factory* _Instance;
 	public:
-		static Factory* Instance();
-
-	private:
 		Factory();
-	public:
 		~Factory();
 
 	public:
-		Block* CreateBlock(uint8 type, uint32 level);
+		PBlock CreateBlock(int type, uint8 level);
 	};
 }

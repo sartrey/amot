@@ -42,19 +42,19 @@ namespace amot
 	#define AMOT_BLOCK_LEVEL_MIN 1
 	#define AMOT_BLOCK_LEVEL_MAX 11
 
-	enum BlockEnum
-	{
-		AMOT_BLOCK_GP1 = 0,
-		AMOT_BLOCK_GP2 = 1,
-		AMOT_BLOCK_FL = 2
-	};
-
 	enum ActionEnum
 	{
 		AMOT_ACTION_ALLOC = 1,
 		AMOT_ACTION_FREE = 2,
 		AMOT_ACTION_RESIZE = 4,
 		AMOT_ACTION_TRIM = 8
+	};
+
+	enum BlockEnum
+	{
+		AMOT_BLOCK_GP1 = 1,
+		AMOT_BLOCK_GP2 = 2,
+		AMOT_BLOCK_FL = 3
 	};
 
 	const int amot_err1 = 1000; //unknown
@@ -78,23 +78,4 @@ namespace amot
 
 	//get min block level for size
 	uint8 GetMinBlockLevel(uint32 size);
-
-	//spin lock
-	class Lock
-	{
-	private:
-		//TRUE - Lock , FALSE - Unlock
-		uint64* _Core;
-
-	public:
-		Lock();
-		~Lock();
-
-	public:
-		//capture lock
-		void Enter();
-
-		//release lock
-		void Leave();
-	};
 }

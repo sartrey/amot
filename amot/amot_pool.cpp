@@ -1,7 +1,7 @@
 #include "amot_pool.h"
-#include "amot_block.h"
-#include "amot_factory.h"
 #include "amot_setting.h"
+#include "amot_factory.h"
+#include "amot_block.h"
 
 namespace amot
 {
@@ -11,11 +11,11 @@ namespace amot
 		_MaxBlockCount = _Setting->MaxBlockCount();
 		_MaxBlockSize = _Setting->MaxBlockSize();
 
+		_Factory = new amot::Factory();
+
 		_Blocks = new PBlock[_MaxBlockCount];
 		for (uint32 i = 0; i < _MaxBlockCount; i++)
 			_Blocks[i] = null;
-
-		Rebuild();
 	}
 
 	Pool::~Pool()
@@ -27,21 +27,38 @@ namespace amot
 					delete _Blocks[i];
 			delete _Blocks;
 		}
+		if (_Factory != null)
+			delete _Factory;
 		if(_Setting != null)
 			delete _Setting;
+	}
+
+	//----- ----- ----- ----- ----- -----
+
+	PBlock Pool::Search(raw data)
+	{
+		for (uint32 i = 0; i < _MaxBlockCount; i++)
+		{
+			PBlock block = _Blocks[i];
+			if (block == null || !block->Enclose(data))
+				continue;
+			return block;
+		}
+		return null;
 	}
 
 	PBlock Pool::Expand(uint32 size)
 	{
 		uint8 lvl = GetMinBlockLevel(size);
-		Factory* factory = Factory::Instance();
 		for (uint32 i = 0; i<_MaxBlockCount; i++)
 		{
 			if (_Blocks[i] == null)
 			{
-				_Blocks[i] = factory->CreateBlock(
+				PBlock block = _Factory->CreateBlock(
 					_Setting->DefaultBlockType(), lvl);
-				return _Blocks[i];
+				block->Reset();
+				_Blocks[i] = block;
+				return block;
 			}
 		}
 		return null;
@@ -49,29 +66,15 @@ namespace amot
 
 	PBlock Pool::Rebuild()
 	{
-		Factory* factory = Factory::Instance();
-		PBlock block = factory->CreateBlock(
-			_Setting->DefaultBlockType(), _Setting->MinBlockLevel());
+		PBlock block = _Factory->CreateBlock(
+			_Setting->DefaultBlockType(), 
+			_Setting->MinBlockLevel());
+		block->Reset();
 		_Blocks[0] = block;
 		return block;
 	}
 
-	void Pool::ToDispose(raw data, uint32 unit)
-	{
-		for (uint32 i = 0; i < _MaxBlockCount; i++)
-		{
-			PBlock block = _Blocks[i];
-			if (block == null || !block->Enclose(data))
-				continue;
-			uint32 count = block->Count(data, unit);
-			uint32 addr = (uint32)data;
-			for (uint32 i = 0; i < count; i++)
-			{
-				((IDisposable*)addr)->Dispose();
-				addr += unit;
-			}
-		}
-	}
+	//----- ----- ----- ----- ----- -----
 
 	raw Pool::Allocate(uint32 size)
 	{
@@ -103,12 +106,9 @@ namespace amot
 
 	void Pool::Free(raw data, bool clear)
 	{
-		for (uint32 i = 0; i < _MaxBlockCount; i++)
-		{
-			PBlock block = _Blocks[i];
-			if (block != null && block->Enclose(data))
-				block->Free(data, clear);
-		}
+		PBlock block = Search(data);
+		if (block != null)
+			block->Free(data, clear);
 	}
 
 	void Pool::FreeAll()
@@ -124,9 +124,27 @@ namespace amot
 		Rebuild();
 	}
 
+	//----- ----- ----- ----- ----- -----
+
+	Factory* Pool::Factory()
+	{
+		return _Factory;
+	}
+
+	void Pool::Mount(PBlock block)
+	{
+		for (uint32 i = 0; i<_MaxBlockCount; i++)
+		{
+			if (_Blocks[i] == null)
+			{
+				_Blocks[i] = block;
+				return;
+			}
+		}
+	}
+
 	void Pool::Optimize()
 	{
-		int block_count = 0;
 		for (uint32 i = 0; i < _MaxBlockCount; i++)
 		{
 			PBlock block = _Blocks[i];
@@ -141,10 +159,6 @@ namespace amot
 			{
 				block->Optimize();
 			}
-			if (block != null)
-				block_count++;
 		}
-		if (block_count == 0)
-			Rebuild();
 	}
 }

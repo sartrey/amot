@@ -9,10 +9,6 @@ namespace amot
 		AMOT_ACTION_RESIZE | 
 		AMOT_ACTION_TRIM)
 	{
-		_Size = GetBlockVolume(level);
-		_Data = new byte[_Size];
-		memset(_Data, 0, _Size);
-		_FirstRecord = null;
 	}
 
 	BlockGP1::~BlockGP1()
@@ -155,6 +151,14 @@ namespace amot
 				break;
 			}
 		}
+	}
+
+	void BlockGP1::Reset()
+	{
+		_Size = GetBlockVolume(_Level);
+		_Data = new byte[_Size];
+		memset(_Data, 0, _Size);
+		_FirstRecord = null;
 	}
 
 	void BlockGP1::Optimize()

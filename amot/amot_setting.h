@@ -7,7 +7,6 @@ namespace amot
 	class AMOT_API Setting
 	{
 	private:
-		bool _HasLock;
 		uint8 _DefaultBlockType;
 		uint8 _MinBlockLevel;
 		uint8 _MaxBlockLevel;
@@ -18,9 +17,6 @@ namespace amot
 		~Setting();
 
 	public:
-		//get lock flag
-		bool HasLock();
-
 		//get default block type
 		uint8 DefaultBlockType();
 
@@ -34,9 +30,6 @@ namespace amot
 		uint32 MaxPoolVolume();
 
 	public:
-		//set lock flag
-		void SetHasLock(bool value);
-
 		//set block type
 		void SetBlockType(uint8 value);
 

@@ -4,9 +4,9 @@ namespace amot
 {
 	Block::Block(uint8 level, uint32 support)
 	{
-		_Size = GetBlockVolume(level);
-		_Data = new byte[_Size];
+		_Level = level;
 		_Support = support;
+		_Data = null;
 	}
 
 	Block::~Block()

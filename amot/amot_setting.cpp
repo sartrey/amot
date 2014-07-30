@@ -4,7 +4,6 @@ namespace amot
 {
 	Setting::Setting()
 	{
-		_HasLock = false;
 		_DefaultBlockType = AMOT_BLOCK_GP1;
 		_MinBlockLevel = 1;
 		_MaxBlockLevel = 11;
@@ -16,11 +15,6 @@ namespace amot
 	}
 
 	//----- ----- ----- ----- ----- -----
-
-	bool Setting::HasLock()
-	{
-		return _HasLock;
-	}
 
 	uint8 Setting::DefaultBlockType()
 	{
@@ -43,11 +37,6 @@ namespace amot
 	}
 
 	//----- ----- ----- ----- ----- -----
-
-	void Setting::SetHasLock(bool value)
-	{
-		_HasLock = value;
-	}
 
 	void Setting::SetBlockType(uint8 value)
 	{
