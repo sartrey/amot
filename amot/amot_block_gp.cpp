@@ -1,25 +1,24 @@
-#include "amot_block_gp1.h"
+#include "amot_block_gp.h"
 
 namespace amot
 {
-	BlockGP1::BlockGP1(uint8 level)
-		: Block(level, 
-		AMOT_ACTION_ALLOC | 
+	BlockGP::BlockGP(uint8 level)
+		: Block(level,
+		AMOT_ACTION_ALLOC |
 		AMOT_ACTION_FREE |
-		AMOT_ACTION_RESIZE | 
-		AMOT_ACTION_TRIM)
+		AMOT_ACTION_RESIZE)
 	{
 	}
 
-	BlockGP1::~BlockGP1()
+	BlockGP::~BlockGP()
 	{
 		ClearRecord();
 	}
 
-	uint32 BlockGP1::UsedSize()
+	uint32 BlockGP::UsedSize()
 	{
 		uint32 result = 0;
-		PRecord rec = _FirstRecord;
+		PRecordGP rec = _FirstRecord;
 		while(rec != null)
 		{
 			result += rec->Size;
@@ -28,15 +27,15 @@ namespace amot
 		return result;
 	}
 
-	uint32 BlockGP1::FreeSize()
+	uint32 BlockGP::FreeSize()
 	{
 		return _Size - UsedSize();
 	}
 
-	uint32 BlockGP1::Count(raw data, uint32 unit)
+	uint32 BlockGP::Count(raw data, uint32 unit)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
-		PRecord rec = _FirstRecord;
+		PRecordGP rec = _FirstRecord;
 		while (rec != null)
 		{
 			if (rec->Offset != offset)
@@ -51,12 +50,12 @@ namespace amot
 	}
 
 
-	raw BlockGP1::Allocate(uint32 size)
+	raw BlockGP::Allocate(uint32 size)
 	{
 		if(size > _Size) 
 			return null;
-		PRecord rec;
-		PRecord rec_zero;
+		PRecordGP rec;
+		PRecordGP rec_zero;
 		rec = _FirstRecord->NextNonzero();
 		if(rec == null) //empty block
 		{
@@ -69,7 +68,7 @@ namespace amot
 			}
 			else
 			{
-				PRecord rec_new = new Record(0, size);
+				PRecordGP rec_new = new RecordGP(0, size);
 				_FirstRecord = rec_new;
 				return _Data;
 			}
@@ -85,14 +84,14 @@ namespace amot
 			}
 			else
 			{
-				PRecord rec_new = new Record(0, size, rec);
+				PRecordGP rec_new = new RecordGP(0, size, rec);
 				_FirstRecord = rec_new;
 				return _Data;
 			}
 		}
 		//gap space
 		uint32 offset_end = rec->Offset + rec->Size;
-		PRecord rec_next = rec->Next->NextNonzero();
+		PRecordGP rec_next = rec->Next->NextNonzero();
 		while(rec_next != null)
 		{
 			if(rec_next->Offset - offset_end >= size)
@@ -106,7 +105,7 @@ namespace amot
 				}
 				else
 				{
-					PRecord rec_new = new Record(offset_end, size, rec_next);
+					PRecordGP rec_new = new RecordGP(offset_end, size, rec_next);
 					rec->Next = rec_new;
 					return Offset(offset_end);
 				}
@@ -127,7 +126,7 @@ namespace amot
 			}
 			else
 			{
-				PRecord rec_new = new Record(offset_end, size);
+				PRecordGP rec_new = new RecordGP(offset_end, size);
 				rec->Next = rec_new;
 				return Offset(offset_end);
 			}
@@ -135,17 +134,17 @@ namespace amot
 		return null;
 	}
 
-	void BlockGP1::Free(raw data, bool clear)
+	void BlockGP::Free(raw data, bool clear)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
-		PRecord rec = _FirstRecord;
-		while(rec != null)
+		PRecordGP rec = _FirstRecord;
+		while (rec != null)
 		{
-			if(rec->Offset != offset) 
+			if (rec->Offset != offset)
 				rec = rec->Next;
 			else
 			{
-				if(clear) 
+				if (clear)
 					memset(data, 0, rec->Size);
 				rec->Size = 0;
 				break;
@@ -153,7 +152,23 @@ namespace amot
 		}
 	}
 
-	void BlockGP1::Reset()
+	void BlockGP::Resize(raw data, uint32 size)
+	{
+		uint32 offset = (uint32)data - (uint32)_Data;
+		PRecordGP rec = _FirstRecord;
+		while (rec != null)
+		{
+			if (rec->Offset != offset)
+				rec = rec->Next;
+			else
+			{
+				rec->Size = size;
+				break;
+			}
+		}
+	}
+
+	void BlockGP::Reset()
 	{
 		_Size = GetBlockVolume(_Level);
 		_Data = new byte[_Size];
@@ -161,11 +176,11 @@ namespace amot
 		_FirstRecord = null;
 	}
 
-	void BlockGP1::Optimize()
+	void BlockGP::Optimize()
 	{
-		PRecord rec = _FirstRecord;
-		PRecord rec_tmp = null;
-		PRecord rec_last = null;
+		PRecordGP rec = _FirstRecord;
+		PRecordGP rec_tmp = null;
+		PRecordGP rec_last = null;
 		_FirstRecord = _FirstRecord->NextNonzero();
 		while(rec != null)
 		{
@@ -185,12 +200,12 @@ namespace amot
 		}
 	}
 
-	void BlockGP1::ClearRecord()
+	void BlockGP::ClearRecord()
 	{
-		PRecord rec = _FirstRecord;
+		PRecordGP rec = _FirstRecord;
 		while(rec != null)
 		{
-			PRecord next = rec->Next;
+			PRecordGP next = rec->Next;
 			delete rec;
 			rec = next;
 		}

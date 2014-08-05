@@ -11,6 +11,7 @@ int main()
 
 	tester->Add("Pool_FL1 alloc/free", Test_2_1);
 	//tester->Add("CRT alloc/free", Test_2_2);
+	
 	/*
 	tester->Add("MP optimize", Test_Optimize);
 	tester->Add("MP ctor/dtor", Test_3_1);

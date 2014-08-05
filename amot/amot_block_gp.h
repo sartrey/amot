@@ -1,19 +1,19 @@
 #pragma once
 
 #include "amot_block.h"
-#include "amot_gp_record.h"
+#include "amot_record_gp.h"
 
 namespace amot
 {
-	//block GP1 : linked list
-	class BlockGP1 : public Block
+	//block GP : linked list
+	class BlockGP : public Block
 	{
 	private:
-		PRecord _FirstRecord;
+		PRecordGP _FirstRecord;
 
 	public:
-		BlockGP1(uint8 level);
-		~BlockGP1();
+		BlockGP(uint8 level);
+		~BlockGP();
 
 	private:
 		void ClearRecord();
@@ -25,8 +25,7 @@ namespace amot
 
 		raw Allocate(uint32 size);
 		void Free(raw data, bool clear = false);
-		//void Resize(raw data, uint32 size);
-		//void Trim(raw data);
+		void Resize(raw data, uint32 size);
 
 		void Reset();
 		void Optimize();

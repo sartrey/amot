@@ -46,15 +46,13 @@ namespace amot
 	{
 		AMOT_ACTION_ALLOC = 1,
 		AMOT_ACTION_FREE = 2,
-		AMOT_ACTION_RESIZE = 4,
-		AMOT_ACTION_TRIM = 8
+		AMOT_ACTION_RESIZE = 4
 	};
 
 	enum BlockEnum
 	{
-		AMOT_BLOCK_GP1 = 1,
-		AMOT_BLOCK_GP2 = 2,
-		AMOT_BLOCK_FL = 3
+		AMOT_BLOCK_GP = 1,
+		AMOT_BLOCK_FL = 2
 	};
 
 	const int amot_err1 = 1000; //unknown

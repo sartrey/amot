@@ -7,6 +7,7 @@ namespace amot
 	class Block;
 	typedef Block* PBlock;
 
+	//block factory
 	class AMOT_API Factory
 	{
 	public:
@@ -14,6 +15,6 @@ namespace amot
 		~Factory();
 
 	public:
-		PBlock CreateBlock(int type, uint8 level);
+		PBlock CreateBlock(int type, uint32 size);
 	};
 }

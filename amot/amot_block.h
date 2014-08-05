@@ -47,9 +47,6 @@ namespace amot
 		//resize space
 		virtual void Resize(raw data, uint32 size);
 
-		//trim space
-		virtual void Trim(raw data);
-
 	public:
 		//reset block
 		virtual void Reset() = 0;

@@ -87,11 +87,11 @@ namespace amot
 		//get factory
 		Factory* Factory();
 
+		//mount block
+		void Mount(PBlock block);
+
 		//search block by data
 		PBlock Search(raw data);
-
-		//mount user block
-		void Mount(PBlock block);
 
 		//optimize pool
 		void Optimize();

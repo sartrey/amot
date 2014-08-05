@@ -7,7 +7,7 @@ namespace amot
 	class AMOT_API Setting
 	{
 	private:
-		uint8 _DefaultBlockType;
+		uint8 _BlockType;
 		uint8 _MinBlockLevel;
 		uint8 _MaxBlockLevel;
 		uint32 _MaxPoolVolume;
@@ -17,8 +17,8 @@ namespace amot
 		~Setting();
 
 	public:
-		//get default block type
-		uint8 DefaultBlockType();
+		//get block type
+		uint8 BlockType();
 
 		//get min block level
 		uint8 MinBlockLevel();

@@ -19,11 +19,17 @@
     <Filter Include="block">
       <UniqueIdentifier>{aedeb16a-2209-4ef2-8366-d35dc79f54e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="block\header">
+    <Filter Include="block\GP">
+      <UniqueIdentifier>{70defdbb-706f-444c-b7dc-9f955952d4c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="block\GP\header">
       <UniqueIdentifier>{04507dcd-7fcd-4ec9-b302-89f78726c22b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="block\source">
+    <Filter Include="block\GP\source">
       <UniqueIdentifier>{62ec34dc-5763-480a-b993-2ffc791ecf7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="block\FL">
+      <UniqueIdentifier>{a4a8fdeb-d5f0-4fcb-b536-bc13eb470851}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -42,23 +48,20 @@
     <ClInclude Include="amot_setting.h">
       <Filter>core\header</Filter>
     </ClInclude>
-    <ClInclude Include="amot_block_gp1.h">
-      <Filter>block\header</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>.resource</Filter>
     </ClInclude>
     <ClInclude Include="amot_factory.h">
       <Filter>core\header</Filter>
     </ClInclude>
-    <ClInclude Include="amot_block_fl1.h">
-      <Filter>block\header</Filter>
+    <ClInclude Include="amot_block_gp.h">
+      <Filter>block\GP\header</Filter>
     </ClInclude>
-    <ClInclude Include="amot_prop_fl.h">
-      <Filter>block\header</Filter>
+    <ClInclude Include="amot_block_fl.h">
+      <Filter>block\FL</Filter>
     </ClInclude>
-    <ClInclude Include="amot_gp_record.h">
-      <Filter>block\header</Filter>
+    <ClInclude Include="amot_record_gp.h">
+      <Filter>block\GP\header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -77,17 +80,17 @@
     <ClCompile Include="amot_setting.cpp">
       <Filter>core\source</Filter>
     </ClCompile>
-    <ClCompile Include="amot_block_gp1.cpp">
-      <Filter>block\source</Filter>
-    </ClCompile>
     <ClCompile Include="amot_factory.cpp">
       <Filter>core\source</Filter>
     </ClCompile>
-    <ClCompile Include="amot_block_fl1.cpp">
-      <Filter>block\source</Filter>
+    <ClCompile Include="amot_block_gp.cpp">
+      <Filter>block\GP\source</Filter>
     </ClCompile>
-    <ClCompile Include="amot_gp_record.cpp">
-      <Filter>block\source</Filter>
+    <ClCompile Include="amot_block_fl.cpp">
+      <Filter>block\FL</Filter>
+    </ClCompile>
+    <ClCompile Include="amot_record_gp.cpp">
+      <Filter>block\GP\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,16 +2,9 @@
 
 void Test_2_1()
 {
-	amot::Pool* pool = new amot::Pool();
-	
-	amot::Factory* factory = pool->Factory();
-	amot::Block* block = factory->CreateBlock(amot::AMOT_BLOCK_FL, 4);
-	amot::IBlockFL* block_prop = dynamic_cast<amot::IBlockFL*>(block);
-	block_prop->SetUnit(300);
-	block->Reset();
-
-	pool->Mount(block);
-	
+	amot::Setting* setting = new amot::Setting();
+	setting->SetBlockType(amot::AMOT_BLOCK_FL);
+	amot::Pool* pool = new amot::Pool(setting);
 	for (int i = 0; i < 50000; i++)
 	{
 		byte** pp = pool->New<byte*>(75);

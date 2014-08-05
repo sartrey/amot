@@ -1,26 +1,26 @@
-#include "amot_gp_record.h"
+#include "amot_record_gp.h"
 
 namespace amot
 {
-	Record::Record()
+	RecordGP::RecordGP()
 	{
 		Offset = 0;
 		Size = 0;
 		Next = null;
 	}
 
-	Record::Record(uint32 offset, uint32 size, Record* next)
+	RecordGP::RecordGP(uint32 offset, uint32 size, RecordGP* next)
 	{
 		Offset = offset;
 		Size = size;
 		Next = next;
 	}
 
-	Record::~Record() { }
+	RecordGP::~RecordGP() { }
 
-	Record* Record::NextZero(uint32 offset_max)
+	RecordGP* RecordGP::NextZero(uint32 offset_max)
 	{
-		Record* rec = this;
+		RecordGP* rec = this;
 		while(rec != null) 
 		{
 			if(rec->Size == 0)
@@ -34,9 +34,9 @@ namespace amot
 		return null;
 	}
 
-	Record* Record::NextNonzero()
+	RecordGP* RecordGP::NextNonzero()
 	{
-		Record* rec = this;
+		RecordGP* rec = this;
 		while(rec != null) 
 		{
 			if(rec->Size > 0)

@@ -4,27 +4,27 @@
 
 namespace amot
 {
-	//memory record
-	class Record
+	//memory record GP
+	class RecordGP
 	{
 	public:
 		uint32 Offset;
 		uint32 Size;
-		Record* Next;
+		RecordGP* Next;
 
 	public:
-		Record();
-		Record(uint32 offset, uint32 size, Record* next = null);
-		~Record();
+		RecordGP();
+		RecordGP(uint32 offset, uint32 size, RecordGP* next = null);
+		~RecordGP();
 
 	public:
 		//return first non-zero record from self
-		Record* NextNonzero();
+		RecordGP* NextNonzero();
 
 		//return first zero rec from self
 		//offset will less than offset_max if offset_max > 0
-		Record* NextZero(uint32 offset_max = 0);
+		RecordGP* NextZero(uint32 offset_max = 0);
 	};
 
-	typedef Record* PRecord;
+	typedef RecordGP* PRecordGP;
 }

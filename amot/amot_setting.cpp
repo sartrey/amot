@@ -4,9 +4,9 @@ namespace amot
 {
 	Setting::Setting()
 	{
-		_DefaultBlockType = AMOT_BLOCK_GP1;
+		_BlockType = AMOT_BLOCK_GP;
 		_MinBlockLevel = 1;
-		_MaxBlockLevel = 11;
+		_MaxBlockLevel = 6;
 		_MaxPoolVolume = GetBlockVolume(4);
 	}
 
@@ -16,9 +16,9 @@ namespace amot
 
 	//----- ----- ----- ----- ----- -----
 
-	uint8 Setting::DefaultBlockType()
+	uint8 Setting::BlockType()
 	{
-		return _DefaultBlockType;
+		return _BlockType;
 	}
 
 	uint8 Setting::MinBlockLevel()
@@ -40,7 +40,7 @@ namespace amot
 
 	void Setting::SetBlockType(uint8 value)
 	{
-		_DefaultBlockType = value;
+		_BlockType = value;
 	}
 
 	void Setting::SetMinBlockLevel(uint8 value)

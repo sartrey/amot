@@ -1,12 +1,11 @@
 #pragma once
 
 #include "amot_block.h"
-#include "amot_prop_fl.h"
 
 namespace amot
 {
 	//block FL
-	class BlockFL1 : public Block, public IBlockFL
+	class BlockFL : public Block
 	{
 	private:
 		uint32 _Unit;
@@ -14,8 +13,8 @@ namespace amot
 		uint32 _RecordTotal;
 
 	public:
-		BlockFL1(uint8 level);
-		~BlockFL1();
+		BlockFL(uint8 level);
+		~BlockFL();
 
 	public:
 		void SetUnit(uint32 unit);

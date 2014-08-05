@@ -1,29 +1,27 @@
-#include "amot_block_fl1.h"
+#include "amot_block_fl.h"
 
 namespace amot
 {
-	BlockFL1::BlockFL1(uint8 level)
+	BlockFL::BlockFL(uint8 level)
 		: Block(level,
 		AMOT_ACTION_ALLOC |
-		AMOT_ACTION_FREE |
-		AMOT_ACTION_RESIZE |
-		AMOT_ACTION_TRIM)
+		AMOT_ACTION_FREE)
 	{
 		_Record = null;
 	}
 
-	BlockFL1::~BlockFL1()
+	BlockFL::~BlockFL()
 	{
 		if (_Record != null)
 			delete _Record;
 	}
 
-	void BlockFL1::SetUnit(uint32 unit)
+	void BlockFL::SetUnit(uint32 unit)
 	{
 		_Unit = unit;
 	}
 
-	uint32 BlockFL1::UsedSize()
+	uint32 BlockFL::UsedSize()
 	{
 		uint32 count = 0;
 		for (uint32 i = 0; i < _RecordTotal; i++)
@@ -38,12 +36,12 @@ namespace amot
 		return size;
 	}
 
-	uint32 BlockFL1::FreeSize()
+	uint32 BlockFL::FreeSize()
 	{
 		return _Size - UsedSize();
 	}
 
-	uint32 BlockFL1::Count(raw data, uint32 unit)
+	uint32 BlockFL::Count(raw data, uint32 unit)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
 		if(offset % _Unit != 0) 
@@ -52,7 +50,7 @@ namespace amot
 		return count;
 	}
 
-	raw BlockFL1::Allocate(uint32 size)
+	raw BlockFL::Allocate(uint32 size)
 	{
 		if (size != _Unit)
 			return null;
@@ -78,7 +76,7 @@ namespace amot
 		return null;
 	}
 
-	void BlockFL1::Free(raw data, bool clear)
+	void BlockFL::Free(raw data, bool clear)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
 		if (offset % _Unit == 0)
@@ -91,7 +89,7 @@ namespace amot
 		}
 	}
 
-	void BlockFL1::Reset()
+	void BlockFL::Reset()
 	{
 		uint32 max_vol = GetBlockVolume(_Level);
 		uint32 max_unit = max_vol / _Unit;
@@ -104,7 +102,7 @@ namespace amot
 		memset(_Record, 0, _RecordTotal);
 	}
 
-	void BlockFL1::Optimize()
+	void BlockFL::Optimize()
 	{
 	}
 }

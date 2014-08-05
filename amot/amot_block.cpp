@@ -41,9 +41,4 @@ namespace amot
 	{
 		throw amot_err2;
 	}
-
-	void Block::Trim(raw)
-	{
-		throw amot_err2;
-	}
 }

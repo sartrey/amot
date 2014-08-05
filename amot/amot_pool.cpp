@@ -49,14 +49,12 @@ namespace amot
 
 	PBlock Pool::Expand(uint32 size)
 	{
-		uint8 lvl = GetMinBlockLevel(size);
 		for (uint32 i = 0; i<_MaxBlockCount; i++)
 		{
 			if (_Blocks[i] == null)
 			{
 				PBlock block = _Factory->CreateBlock(
-					_Setting->DefaultBlockType(), lvl);
-				block->Reset();
+					_Setting->BlockType(), size);
 				_Blocks[i] = block;
 				return block;
 			}
@@ -67,9 +65,7 @@ namespace amot
 	PBlock Pool::Rebuild()
 	{
 		PBlock block = _Factory->CreateBlock(
-			_Setting->DefaultBlockType(), 
-			_Setting->MinBlockLevel());
-		block->Reset();
+			_Setting->BlockType(), 0);
 		_Blocks[0] = block;
 		return block;
 	}

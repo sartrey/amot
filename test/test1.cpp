@@ -33,28 +33,6 @@ void Test_1_1()
 		}
 		pool->Optimize();
 	}
-	/*
-	for (int i = 0; i<3; i++)
-		p1[i] = i;
-	for (int i = 0; i<7; i++)
-		p2[i] = i;
-	for (int i = 0; i<15; i++)
-		p3[i] = i;
-	for (int i = 0; i<7; i++)
-		p4[i] = i;
-	for (int i = 0; i<290; i++)
-		p5[i] = i;
-	for (int i = 0; i<7; i++)
-		p6[i] = i;
-	for (int i = 0; i<3; i++)
-		p7[i] = i;
-	for (int i = 0; i<7; i++)
-		p8[i] = i;
-	for (int i = 0; i<3; i++)
-		p9[i] = i;
-	for (int i = 0; i<7; i++)
-		p10[i] = i;
-	*/
 	delete pool;
 }
 
