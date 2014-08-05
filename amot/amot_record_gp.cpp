@@ -23,7 +23,7 @@ namespace amot
 		RecordGP* rec = this;
 		while(rec != null) 
 		{
-			if(rec->Size == 0)
+			if (rec->Size == 0)
 			{
 				if(offset_max == 0 || rec->Offset < offset_max)
 					return rec;

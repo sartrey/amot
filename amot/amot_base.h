@@ -60,14 +60,6 @@ namespace amot
 	const int amot_err3 = 1002; //invalid level
 	const int amot_err4 = 1003; //too many blocks
 
-	//interface: disposable object
-	class AMOT_API IDisposable
-	{
-	public:
-		//default <destructor>
-		virtual bool Dispose() = 0;
-	};
-
 	//valid block level
 	void ValidBlockLevel(uint8 level);
 

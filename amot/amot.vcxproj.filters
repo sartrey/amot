@@ -63,6 +63,9 @@
     <ClInclude Include="amot_record_gp.h">
       <Filter>block\GP\header</Filter>
     </ClInclude>
+    <ClInclude Include="amot_object.h">
+      <Filter>core\header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="amot_base.cpp">

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "amot_base.h"
+#include "amot_object.h"
 
 namespace amot
 {
@@ -40,10 +41,7 @@ namespace amot
 		void FreeAll();
 
 		//resize space
-		void Resize(raw data, uint32 size);
-
-		//trim space by data
-		void Trim(raw data);
+		raw Resize(raw data, uint32 size);
 
 	public:
 		//new object
@@ -58,8 +56,9 @@ namespace amot
 				uint32 addr = (uint32)data;
 				for(uint32 i = 0; i < count; i++)
 				{
-					new((raw)addr) T();
-					addr += size;
+					new((raw)addr) T(); //unsafe
+					((IObject*)addr)->New();
+					addr += unit;
 				}
 			}
 			return (T*)data;
@@ -67,19 +66,20 @@ namespace amot
 
 		//dispose object
 		template<typename T>
-		void Dispose(T* data)
+		void Dispose(T* data, bool clear = false)
 		{
 			uint32 unit = sizeof(T);
 			PBlock block = Search(data);
-			if (block == null)
+			if (block != null)
 			{
 				uint32 count = block->Count(data, unit);
 				uint32 addr = (uint32)data;
 				for (uint32 i = 0; i < count; i++)
 				{
-					((IDisposable*)addr)->Dispose();
+					((IObject*)addr)->Dispose();
 					addr += unit;
 				}
+				block->Free(data, clear);
 			}
 		}
 

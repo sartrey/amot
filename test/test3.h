@@ -1,16 +1,16 @@
 #include "amot.h"
 
-class A : public amot::IDisposable
+class A : public amot::IObject
 {
 public:
 	int _a;
 	float _b;
 
 public:
-	A()
+	void New()
 	{
 		_a = 12;
-		_b = 24.4;
+		_b = 24.4f;
 	}
 
 	bool Dispose()
@@ -20,3 +20,6 @@ public:
 		return false;
 	}
 };
+
+void Test_3_1();
+void Test_3_2();

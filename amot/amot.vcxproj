@@ -93,6 +93,7 @@
     <ClInclude Include="amot_block_fl.h" />
     <ClInclude Include="amot_block_gp.h" />
     <ClInclude Include="amot_factory.h" />
+    <ClInclude Include="amot_object.h" />
     <ClInclude Include="amot_setting.h" />
     <ClInclude Include="amot_pool.h" />
     <ClInclude Include="amot_record_gp.h" />

@@ -52,7 +52,7 @@ namespace amot
 
 	raw BlockGP::Allocate(uint32 size)
 	{
-		if(size > _Size) 
+		if(size > _Size)
 			return null;
 		PRecordGP rec;
 		PRecordGP rec_zero;
@@ -60,7 +60,7 @@ namespace amot
 		if(rec == null) //empty block
 		{
 			rec_zero = _FirstRecord->NextZero();
-			if(rec_zero != null)
+			if (rec_zero != null)
 			{
 				rec_zero->Offset = 0;
 				rec_zero->Size = size;
@@ -75,6 +75,7 @@ namespace amot
 		}
 		else if(rec->Offset > 0 && size <= rec->Offset) //left space
 		{
+			//try to find left zero record
 			rec_zero = _FirstRecord->NextZero(rec->Offset);
 			if(rec_zero != null)
 			{
@@ -138,32 +139,48 @@ namespace amot
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
 		PRecordGP rec = _FirstRecord;
-		while (rec != null)
-		{
-			if (rec->Offset != offset)
-				rec = rec->Next;
-			else
-			{
-				if (clear)
-					memset(data, 0, rec->Size);
-				rec->Size = 0;
-				break;
-			}
-		}
+		while (rec != null && rec->Offset != offset)
+			rec = rec->Next;
+		if (rec == null)
+			return;
+		if (clear)
+			memset(data, 0, rec->Size);
+		rec->Size = 0;
 	}
 
-	void BlockGP::Resize(raw data, uint32 size)
+	raw BlockGP::Resize(raw data, uint32 size)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
 		PRecordGP rec = _FirstRecord;
-		while (rec != null)
+		while (rec != null && rec->Offset != offset)
+			rec = rec->Next;
+		if (rec == null)
+			return null;
+		if (rec->Size >= size)
 		{
-			if (rec->Offset != offset)
-				rec = rec->Next;
-			else
+			rec->Size = size;
+			return data;
+		}
+		else
+		{
+			PRecordGP rec_next = rec->Next->NextNonzero();
+			uint32 space = (rec_next == null ? 
+				_Size - rec->Offset: 
+				rec_next->Offset - rec->Offset);
+			if (space >= size)
 			{
 				rec->Size = size;
-				break;
+				return data;
+			}
+			else
+			{
+				raw data_new = Allocate(size);
+				if (data_new != null)
+				{
+					memcpy(data_new, data, rec->Size);
+					rec->Size = 0;
+				}
+				return data_new;
 			}
 		}
 	}
@@ -178,11 +195,14 @@ namespace amot
 
 	void BlockGP::Optimize()
 	{
+		//set first record
 		PRecordGP rec = _FirstRecord;
+		_FirstRecord = rec->NextNonzero();
+
+		//clear zero record
 		PRecordGP rec_tmp = null;
 		PRecordGP rec_last = null;
-		_FirstRecord = _FirstRecord->NextNonzero();
-		while(rec != null)
+		while (rec != null)
 		{
 			if(rec->Size == 0)
 			{

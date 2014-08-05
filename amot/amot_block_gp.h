@@ -25,7 +25,7 @@ namespace amot
 
 		raw Allocate(uint32 size);
 		void Free(raw data, bool clear = false);
-		void Resize(raw data, uint32 size);
+		raw Resize(raw data, uint32 size);
 
 		void Reset();
 		void Optimize();

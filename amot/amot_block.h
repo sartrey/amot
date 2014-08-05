@@ -45,7 +45,7 @@ namespace amot
 		virtual void Free(raw data, bool clear = false);
 
 		//resize space
-		virtual void Resize(raw data, uint32 size);
+		virtual raw Resize(raw data, uint32 size);
 
 	public:
 		//reset block

@@ -37,7 +37,7 @@ namespace amot
 		throw amot_err2;
 	}
 
-	void Block::Resize(raw, uint32)
+	raw Block::Resize(raw, uint32)
 	{
 		throw amot_err2;
 	}

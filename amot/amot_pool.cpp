@@ -94,7 +94,7 @@ namespace amot
 		{
 			raw data = block->Allocate(size);
 			if(data == null) 
-				throw amot_err4;
+				throw amot_err1;
 			else return data;
 		}
 		return null;
@@ -118,6 +118,14 @@ namespace amot
 			_Blocks[i] = null;
 		}
 		Rebuild();
+	}
+
+	raw Pool::Resize(raw data, uint32 size)
+	{
+		PBlock block = Search(data);
+		if (block != null)
+			return block->Resize(data, size);
+		return null;
 	}
 
 	//----- ----- ----- ----- ----- -----
@@ -152,9 +160,7 @@ namespace amot
 				_Blocks[i] = null;
 			}
 			else
-			{
 				block->Optimize();
-			}
 		}
 	}
 }

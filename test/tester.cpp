@@ -12,16 +12,16 @@ Tester::~Tester()
 
 void Tester::Run()
 {
-	LARGE_INTEGER freq,t1,t2;
+	LARGE_INTEGER freq, t1, t2;
 	QueryPerformanceFrequency(&freq);
 
-	for(int i=0; i != _Tests.size(); i++)
+	for (amot::uint32 i = 0; i < _Tests.size(); i++)
 	{
 		QueryPerformanceCounter(&t1);
 		(*((Action)(_Tests[i])))();
 		QueryPerformanceCounter(&t2);
-		cout<<"[Test: "<<_Names[i].c_str()<<"] ";
-		cout<<(t2.QuadPart-t1.QuadPart) * 1000.0 / freq.QuadPart<<"(ms)"<<endl;
+		cout << "[Test: " << _Names[i].c_str() << "] ";
+		cout << (t2.QuadPart - t1.QuadPart) * 1000.0 / freq.QuadPart << "(ms)" << endl;
 	}
 }
 
