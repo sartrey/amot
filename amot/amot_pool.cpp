@@ -20,16 +20,16 @@ namespace amot
 
 	Pool::~Pool()
 	{
-		if(_Blocks != null) 
+		if (_Blocks != null)
 		{
-			for (uint32 i = 0; i<_Setting->MaxBlockCount(); i++)
-				if(_Blocks[i] != null)
+			for (uint32 i = 0; i < _Setting->MaxBlockCount(); i++)
+				if (_Blocks[i] != null)
 					delete _Blocks[i];
 			delete _Blocks;
 		}
 		if (_Factory != null)
 			delete _Factory;
-		if(_Setting != null)
+		if (_Setting != null)
 			delete _Setting;
 	}
 
@@ -49,7 +49,7 @@ namespace amot
 
 	PBlock Pool::Expand(uint32 size)
 	{
-		for (uint32 i = 0; i<_MaxBlockCount; i++)
+		for (uint32 i = 0; i < _MaxBlockCount; i++)
 		{
 			if (_Blocks[i] == null)
 			{
@@ -78,22 +78,22 @@ namespace amot
 			return null;
 
 		//1st : try to allocate memory
-		for (uint32 i = 0; i<_MaxBlockCount; i++)
+		for (uint32 i = 0; i < _MaxBlockCount; i++)
 		{
 			PBlock block = _Blocks[i];
-			if(block == null)
+			if (block == null)
 				continue;
 			raw data = block->Allocate(size);
-			if(data != null) 
+			if (data != null)
 				return data;
 		}
 
 		//2nd : try to create block
 		PBlock block = Expand(size);
-		if(block != null)
+		if (block != null)
 		{
 			raw data = block->Allocate(size);
-			if(data == null) 
+			if (data == null)
 				throw amot_err1;
 			else return data;
 		}
@@ -137,7 +137,7 @@ namespace amot
 
 	void Pool::Mount(PBlock block)
 	{
-		for (uint32 i = 0; i<_MaxBlockCount; i++)
+		for (uint32 i = 0; i < _MaxBlockCount; i++)
 		{
 			if (_Blocks[i] == null)
 			{

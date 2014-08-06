@@ -44,7 +44,7 @@ namespace amot
 	uint32 BlockFL::Count(raw data, uint32 unit)
 	{
 		uint32 offset = (uint32)data - (uint32)_Data;
-		if(offset % _Unit != 0) 
+		if (offset % _Unit != 0)
 			return 0;
 		uint32 count = _Unit / unit;
 		return count;

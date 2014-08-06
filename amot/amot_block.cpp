@@ -11,7 +11,7 @@ namespace amot
 
 	Block::~Block()
 	{
-		if(_Data != null)
+		if (_Data != null)
 			delete _Data;
 	}
 

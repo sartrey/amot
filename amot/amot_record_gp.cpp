@@ -21,11 +21,11 @@ namespace amot
 	RecordGP* RecordGP::NextZero(uint32 offset_max)
 	{
 		RecordGP* rec = this;
-		while(rec != null) 
+		while (rec != null)
 		{
 			if (rec->Size == 0)
 			{
-				if(offset_max == 0 || rec->Offset < offset_max)
+				if (offset_max == 0 || rec->Offset < offset_max)
 					return rec;
 				return null;
 			}
@@ -37,9 +37,9 @@ namespace amot
 	RecordGP* RecordGP::NextNonzero()
 	{
 		RecordGP* rec = this;
-		while(rec != null) 
+		while (rec != null)
 		{
-			if(rec->Size > 0)
+			if (rec->Size > 0)
 				return rec;
 			rec = rec->Next;
 		}

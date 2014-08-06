@@ -51,10 +51,10 @@ namespace amot
 			uint32 unit = sizeof(T);
 			uint32 size = unit * count;
 			raw data = Allocate(size);
-			if(ctor)
+			if (ctor)
 			{
 				uint32 addr = (uint32)data;
-				for(uint32 i = 0; i < count; i++)
+				for (uint32 i = 0; i < count; i++)
 				{
 					new((raw)addr) T(); //unsafe
 					((IObject*)addr)->New();

@@ -19,7 +19,7 @@ namespace amot
 	{
 		uint32 result = 0;
 		PRecordGP rec = _FirstRecord;
-		while(rec != null)
+		while (rec != null)
 		{
 			result += rec->Size;
 			rec = rec->Next;
@@ -52,12 +52,12 @@ namespace amot
 
 	raw BlockGP::Allocate(uint32 size)
 	{
-		if(size > _Size)
+		if (size > _Size)
 			return null;
 		PRecordGP rec;
 		PRecordGP rec_zero;
 		rec = _FirstRecord->NextNonzero();
-		if(rec == null) //empty block
+		if (rec == null) //empty block
 		{
 			rec_zero = _FirstRecord->NextZero();
 			if (rec_zero != null)
@@ -73,11 +73,11 @@ namespace amot
 				return _Data;
 			}
 		}
-		else if(rec->Offset > 0 && size <= rec->Offset) //left space
+		else if (rec->Offset > 0 && size <= rec->Offset) //left space
 		{
 			//try to find left zero record
 			rec_zero = _FirstRecord->NextZero(rec->Offset);
-			if(rec_zero != null)
+			if (rec_zero != null)
 			{
 				rec_zero->Offset = 0;
 				rec_zero->Size = size;
@@ -93,12 +93,12 @@ namespace amot
 		//gap space
 		uint32 offset_end = rec->Offset + rec->Size;
 		PRecordGP rec_next = rec->Next->NextNonzero();
-		while(rec_next != null)
+		while (rec_next != null)
 		{
-			if(rec_next->Offset - offset_end >= size)
+			if (rec_next->Offset - offset_end >= size)
 			{
 				rec_zero = rec->Next->NextZero(rec_next->Offset);
-				if(rec_zero != null)
+				if (rec_zero != null)
 				{
 					rec_zero->Offset = offset_end;
 					rec_zero->Size = size;
@@ -116,10 +116,10 @@ namespace amot
 			offset_end = rec->Offset + rec->Size;
 		}
 		//right space
-		if(_Size - offset_end >= size)
+		if (_Size - offset_end >= size)
 		{
 			rec_zero = rec->Next;
-			if(rec_zero != null) //must be zero rec
+			if (rec_zero != null) //must be zero rec
 			{
 				rec_zero->Offset = offset_end;
 				rec_zero->Size = size;
@@ -164,8 +164,8 @@ namespace amot
 		else
 		{
 			PRecordGP rec_next = rec->Next->NextNonzero();
-			uint32 space = (rec_next == null ? 
-				_Size - rec->Offset: 
+			uint32 space = (rec_next == null ?
+				_Size - rec->Offset :
 				rec_next->Offset - rec->Offset);
 			if (space >= size)
 			{
@@ -204,15 +204,15 @@ namespace amot
 		PRecordGP rec_last = null;
 		while (rec != null)
 		{
-			if(rec->Size == 0)
+			if (rec->Size == 0)
 			{
 				rec_tmp = rec->Next;
-				if(rec_last != null)
+				if (rec_last != null)
 					rec_last->Next = rec_tmp;
 				delete rec;
 				rec = rec_tmp;
 			}
-			else 
+			else
 			{
 				rec_last = rec;
 				rec = rec->Next;
@@ -223,7 +223,7 @@ namespace amot
 	void BlockGP::ClearRecord()
 	{
 		PRecordGP rec = _FirstRecord;
-		while(rec != null)
+		while (rec != null)
 		{
 			PRecordGP next = rec->Next;
 			delete rec;
